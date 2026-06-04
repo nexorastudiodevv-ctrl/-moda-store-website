@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>متجر مودة - أحدث صيحات الموضة والملابس العربية</title>
+    <meta
+      name="description"
+      content="اكتشف أحدث تشكيلات الملابس الصيفية والشتوية في متجر مودة. تسوق التيشيرتات، القمصان، والبنطلونات بأفضل الأسعار وأعلى جودة."
+    />
+    <meta
+      name="keywords"
+      content="ملابس, موضة, متجر إلكتروني, تيشيرتات, قمصان, أزياء عربية, تسوق أونلاين"
+    />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="متجر مودة - أحدث صيحات الموضة" />
+    <meta
+      property="og:description"
+      content="تسوق أحدث الموديلات العصرية بأسعار تنافسية."
+    />
+    <meta
+      property="og:image"
+      content="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800"
+    />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="متجر مودة - أحدث صيحات الموضة" />
+
+    <!-- JSON-LD for Organization -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "متجر مودة - MODA Store",
+        "url": "https://yourdomain.com",
+        "logo": "https://yourdomain.com/logo.png",
+        "sameAs": [
+          "https://facebook.com/modastore",
+          "https://instagram.com/modastore"
+        ]
+      }
+    </script>
+
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="container">
+        <button class="menu-toggle">☰</button>
+        <div class="logo">MODA</div>
+
+        <nav class="nav">
+          <a href="index.html">الرئيسية</a>
+
+          <a href="products.html">المنتجات</a>
+
+          <a href="#">وصل حديثاً</a>
+
+          <a href="#" class="nav-link-sale">التخفيضات</a>
+
+          <a href="contact.html">تواصل معنا</a>
+        </nav>
+
+        <div class="header-actions">
+          <button id="dark-mode-toggle" class="icon-btn">🌙</button>
+          <button class="icon-btn">❤ <span id="wishlist-count">0</span></button>
+
+          <button class="icon-btn">👤</button>
+
+          <a href="cart.html" class="cart-btn"> 🛒 </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Side Menu -->
+    <div class="side-menu-overlay"></div>
+    <div class="side-menu">
+      <button class="close-menu">✕</button>
+      <a href="index.html">🏠 الرئيسية</a>
+      <a href="products.html">👕 كل المنتجات</a>
+      <a href="products.html#mens-section">👨 قسم الرجال</a>
+      <a href="products.html#womens-section">👩 قسم النساء</a>
+      <a href="#">✨ وصل حديثاً</a>
+      <a href="#" class="nav-link-sale">🔥 التخفيضات</a>
+      <a href="#">📞 تواصل معنا</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1>تشكيلة الصيف الجديدة</h1>
+
+          <p>اكتشف أحدث صيحات الموضة بأسعار مميزة.</p>
+
+          <a href="products.html" class="btn"> تسوق الآن </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Banners -->
+    <section class="banners">
+      <div class="container slider-container">
+        <div class="banner slide fade">
+          <img
+            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80"
+            alt="عرض"
+            class="banner-bg"
+          />
+          <h3>خصم حتى 40%</h3>
+          <p>على منتجات مختارة</p>
+        </div>
+
+        <div class="banner slide fade">
+          <img
+            src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80"
+            alt="جديد"
+            class="banner-bg"
+            loading="lazy"
+          />
+          <h3>وصل حديثاً</h3>
+          <p>تشكيلة الموسم الجديد</p>
+        </div>
+
+        <button class="slider-nav prev" onclick="changeSlide(-1)">
+          &#10094;
+        </button>
+        <button class="slider-nav next" onclick="changeSlide(1)">
+          &#10095;
+        </button>
+
+        <div class="slider-dots">
+          <span class="dot" onclick="currentSlide(1)"></span>
+          <span class="dot" onclick="currentSlide(2)"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+      <div class="container">
+        <h2 class="section-title">تسوق حسب الفئة</h2>
+
+        <div class="category-grid">
+          <div class="category-card">
+            <img
+              src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=300&q=80"
+              alt="تيشيرتات"
+              loading="lazy"
+            />
+            <h3>تيشيرتات</h3>
+          </div>
+
+          <div class="category-card">
+            <img
+              src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=300&q=80"
+              alt="قمصان"
+              loading="lazy"
+            />
+            <h3>قمصان</h3>
+          </div>
+
+          <div class="category-card">
+            <img
+              src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=300&q=80"
+              alt="بناطيل"
+              loading="lazy"
+            />
+            <h3>بناطيل</h3>
+          </div>
+
+          <div class="category-card">
+            <img
+              src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=300&q=80"
+              alt="أحذية"
+              loading="lazy"
+            />
+            <h3>أحذية</h3>
+          </div>
+
+          <div class="category-card">
+            <img
+              src="https://images.unsplash.com/photo-1523206489230-c012c64b2b48?auto=format&fit=crop&w=300&q=80"
+              alt="إكسسوارات"
+              loading="lazy"
+            />
+            <h3>إكسسوارات</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products -->
+    <section class="products">
+      <div class="container">
+        <h2 class="section-title">الأكثر مبيعاً</h2>
+
+        <div class="product-grid">
+          <div class="product-card">
+            <div class="product-image-gallery">
+              <img
+                src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500"
+                class="main-card-img"
+                alt="تيشيرت"
+                loading="lazy"
+              />
+              <div class="thumb-bar">
+                <img
+                  src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500"
+                  class="thumb-item active"
+                  loading="lazy"
+                />
+                <img
+                  src="https://images.unsplash.com/photo-1503341452305-1fe1284d0c28?w=500"
+                  class="thumb-item"
+                  loading="lazy"
+                />
+                <img
+                  src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=500"
+                  class="thumb-item"
+                  loading="lazy"
+                />
+                <img
+                  src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500"
+                  class="thumb-item"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+
+            <p class="brand-name">MODA EXCLUSIVE</p>
+            <h3>تيشيرت قطني</h3>
+
+            <p class="price">299 جنيه</p>
+
+            <a href="product-detail.html" class="btn-small"> عرض المنتج </a>
+          </div>
+
+          <div class="product-card">
+            <div class="product-image-gallery">
+              <img
+                src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500"
+                class="main-card-img"
+                alt="قميص"
+                loading="lazy"
+              />
+              <div class="thumb-bar">
+                <img
+                  src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500"
+                  class="thumb-item active"
+                  loading="lazy"
+                />
+                <img
+                  src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=500"
+                  class="thumb-item"
+                  loading="lazy"
+                />
+                <img
+                  src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500"
+                  class="thumb-item"
+                  loading="lazy"
+                />
+                <img
+                  src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500"
+                  class="thumb-item"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+            <p class="brand-name">LEVI'S</p>
+
+            <h3>قميص كاجوال</h3>
+
+            <p class="price">399 جنيه</p>
+
+            <a href="product-detail.html" class="btn-small"> عرض المنتج </a>
+          </div>
+
+          <div class="product-card">
+            <div class="product-image-gallery">
+              <img
+                src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=500"
+                class="main-card-img"
+                alt="بنطال"
+                loading="lazy"
+              />
+              <div class="thumb-bar">
+                <img
+                  src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=500"
+                  class="thumb-item active"
+                  loading="lazy"
+                />
+                <img
+                  src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500"
+                  class="thumb-item"
+                  loading="lazy"
+                />
+                <img
+                  src="https://images.unsplash.com/photo-1503341452305-1fe1284d0c28?w=500"
+                  class="thumb-item"
+                  loading="lazy"
+                />
+                <img
+                  src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500"
+                  class="thumb-item"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+            <p class="brand-name">DENIM CO</p>
+
+            <h3>بنطال جينز</h3>
+
+            <p class="price">499 جنيه</p>
+
+            <a href="product-detail.html" class="btn-small"> عرض المنتج </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="social-links">
+          <a href="#" target="_blank" title="فيسبوك"
+            ><i class="fab fa-facebook-f"></i
+          ></a>
+          <a href="#" target="_blank" title="إنستغرام"
+            ><i class="fab fa-instagram"></i
+          ></a>
+          <a href="#" target="_blank" title="تويتر"
+            ><i class="fab fa-twitter"></i
+          ></a>
+          <a href="#" target="_blank" title="واتساب"
+            ><i class="fab fa-whatsapp"></i
+          ></a>
+        </div>
+        <p>جميع الحقوق محفوظة © 2026</p>
+      </div>
+    </footer>
+
+    <script src="main.js"></script>
+  </body>
+</html>
+```

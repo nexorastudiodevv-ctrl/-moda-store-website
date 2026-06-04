@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>سلة المشتريات - Moda Store</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <button class="menu-toggle">☰</button>
+        <div class="logo">MODA</div>
+      </div>
+    </header>
+
+    <!-- Side Menu -->
+    <div class="side-menu-overlay"></div>
+    <div class="side-menu">
+      <button class="close-menu">✕</button>
+      <a href="index.html">🏠 الرئيسية</a>
+      <a href="products.html">👕 كل المنتجات</a>
+      <a href="products.html#mens-section">👨 قسم الرجال</a>
+      <a href="products.html#womens-section">👩 قسم النساء</a>
+      <a href="#">✨ وصل حديثاً</a>
+      <a href="#">🔥 التخفيضات</a>
+      <a href="#">📞 تواصل معنا</a>
+    </div>
+
+    <main class="container">
+      <h2 class="section-title">سلة المشتريات</h2>
+      <div style="overflow-x: auto; -webkit-overflow-scrolling: touch">
+        <table
+          style="
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+          "
+        >
+          <tr style="border-bottom: 2px solid #eee; text-align: right">
+            <th style="padding: 15px">المنتج</th>
+            <th>الكمية</th>
+            <th>السعر</th>
+          </tr>
+          <tr style="border-bottom: 1px solid #eee">
+            <td
+              style="
+                padding: 15px;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+              "
+            >
+              <img
+                src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=50&q=80"
+              />
+              <span>تيشيرت قطني</span>
+            </td>
+            <td>1</td>
+            <td>350 جنيه</td>
+          </tr>
+        </table>
+      </div>
+      <div style="text-align: left; background: #f9f9f9; padding: 20px">
+        <h3>الإجمالي: 350 جنيه</h3>
+        <a href="checkout.html" class="btn" style="margin-top: 10px"
+          >الانتقال للدفع</a
+        >
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="container">
+        <div class="social-links">
+          <a href="#" target="_blank" title="فيسبوك"
+            ><i class="fab fa-facebook-f"></i
+          ></a>
+          <a href="#" target="_blank" title="إنستغرام"
+            ><i class="fab fa-instagram"></i
+          ></a>
+          <a href="#" target="_blank" title="تويتر"
+            ><i class="fab fa-twitter"></i
+          ></a>
+          <a href="#" target="_blank" title="واتساب"
+            ><i class="fab fa-whatsapp"></i
+          ></a>
+        </div>
+        <p>جميع الحقوق محفوظة © 2026</p>
+      </div>
+    </footer>
+    <script src="main.js"></script>
+  </body>
+</html>

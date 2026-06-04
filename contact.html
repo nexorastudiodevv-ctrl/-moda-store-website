@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تواصل معنا - متجر مودة</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <button class="menu-toggle">☰</button>
+        <div class="logo">MODA</div>
+        <nav class="nav">
+          <a href="index.html">الرئيسية</a>
+          <a href="products.html">المنتجات</a>
+          <a href="contact.html">تواصل معنا</a>
+        </nav>
+        <div class="header-actions">
+          <button id="dark-mode-toggle" class="icon-btn">🌙</button>
+          <button class="icon-btn">❤ <span id="wishlist-count">0</span></button>
+          <a href="cart.html" class="cart-btn">🛒</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="side-menu-overlay"></div>
+    <div class="side-menu">
+      <button class="close-menu">✕</button>
+      <a href="index.html">🏠 الرئيسية</a>
+      <a href="products.html">👕 كل المنتجات</a>
+      <a href="products.html#mens-section">👨 قسم الرجال</a>
+      <a href="products.html#womens-section">👩 قسم النساء</a>
+      <a href="contact.html">📞 تواصل معنا</a>
+    </div>
+
+    <main class="container">
+      <h1 class="section-title">تواصل معنا</h1>
+
+      <div class="contact-grid">
+        <!-- معلومات الاتصال -->
+        <div class="contact-info">
+          <div class="info-item">
+            <h3>📍 عنواننا</h3>
+            <p>القاهرة، مدينة نصر، شارع الموضة الرئيسي</p>
+          </div>
+          <div class="info-item">
+            <h3>📞 اتصل بنا</h3>
+            <p>+20 123 456 7890</p>
+          </div>
+          <div class="info-item">
+            <h3>✉ البريد الإلكتروني</h3>
+            <p>support@moda-store.com</p>
+          </div>
+          <div class="info-item">
+            <h3>⏰ ساعات العمل</h3>
+            <p>يومياً من 10 صباحاً حتى 10 مساءً</p>
+          </div>
+        </div>
+
+        <!-- نموذج المراسلة -->
+        <div class="contact-form-container">
+          <form id="contact-form">
+            <div class="form-group">
+              <label>الاسم بالكامل</label>
+              <input
+                type="text"
+                id="contact-name"
+                placeholder="أدخل اسمك"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>البريد الإلكتروني</label>
+              <input
+                type="email"
+                id="contact-email"
+                placeholder="example@mail.com"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>الموضوع</label>
+              <input
+                type="text"
+                id="contact-subject"
+                placeholder="كيف يمكننا مساعدتك؟"
+              />
+            </div>
+            <div class="form-group">
+              <label>الرسالة</label>
+              <textarea
+                id="contact-message"
+                rows="5"
+                placeholder="اكتب رسالتك هنا..."
+                required
+              ></textarea>
+            </div>
+            <button type="submit" class="btn" style="width: 100%">
+              إرسال الرسالة
+            </button>
+          </form>
+          <div
+            id="form-feedback"
+            style="
+              display: none;
+              margin-top: 20px;
+              text-align: center;
+              padding: 15px;
+              border-radius: 4px;
+              background: #dcfce7;
+              color: #166534;
+            "
+          >
+            تم إرسال رسالتك بنجاح! سنقوم بالرد عليك في أقرب وقت.
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="social-links">
+          <a href="#" target="_blank" title="فيسبوك"
+            ><i class="fab fa-facebook-f"></i
+          ></a>
+          <a href="#" target="_blank" title="إنستغرام"
+            ><i class="fab fa-instagram"></i
+          ></a>
+          <a href="#" target="_blank" title="تويتر"
+            ><i class="fab fa-twitter"></i
+          ></a>
+          <a href="#" target="_blank" title="واتساب"
+            ><i class="fab fa-whatsapp"></i
+          ></a>
+        </div>
+        <p>جميع الحقوق محفوظة © 2026</p>
+      </div>
+    </footer>
+    <script src="main.js"></script>
+  </body>
+</html>
