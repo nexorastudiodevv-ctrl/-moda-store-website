@@ -282,8 +282,21 @@
             <div class="product-card-body">
               <p class="brand-name">MODA EXCLUSIVE</p>
               <h3>تيشيرت قطني</h3>
+              <div class="product-rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <span>(24)</span>
+              </div>
               <button class="wishlist-btn">❤</button>
-              <p class="price">299 جنيه</p>
+              <p class="price">299 جنيه <span class="old-price">450 جنيه</span></p>
+              <div class="color-swatches-preview">
+                <div class="swatch-small" style="background-color: black;"></div>
+                <div class="swatch-small" style="background-color: white;"></div>
+                <div class="swatch-small" style="background-color: navy;"></div>
+              </div>
               <a href="product-detail.html" class="btn-small"> عرض المنتج </a>
             </div>
           </div>
@@ -403,6 +416,12 @@
         <p>جميع الحقوق محفوظة © 2026</p>
       </div>
     </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="toast-notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message"></span>
+    </div>
 
     <script src="main.js" defer></script>
   </body>

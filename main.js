@@ -14,6 +14,24 @@ function updateCartCountDisplay() {
     }
 }
 
+// New function for toast notifications
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast-notification');
+    const toastMessage = document.getElementById('toast-message');
+    if (toast && toastMessage) {
+        toastMessage.textContent = message;
+        toast.classList.remove('success', 'error'); // Clear previous types
+        toast.classList.add(type);
+        // Update icon based on type
+        toast.querySelector('i').className = type === 'error' ? 'fas fa-times-circle' : 'fas fa-check-circle';
+        toast.classList.add('show');
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000); // Hide after 3 seconds
+    }
+}
+
 function getWishlist() {
     return JSON.parse(localStorage.getItem('wishlist')) || [];
 }
@@ -222,8 +240,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 else cart.push(product);
                 
                 localStorage.setItem('cart', JSON.stringify(cart));
-                updateCartCountDisplay();
-                alert('تمت إضافة المنتج للسلة بنجاح!');
+                updateCartCountDisplay(); // تحديث عداد السلة
+                showToast('تمت إضافة المنتج للسلة بنجاح!');
             });
         });
     });
@@ -267,27 +285,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 10. منطق صفحة تفاصيل المنتج (Dynamic Product Details) ---
-    const productLinks = document.querySelectorAll('.product-card .btn-small');
-    productLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            const card = e.target.closest('.product-card');
-            if (!card) return;
-            const mainImageSrc = card.querySelector('.main-card-img').src;
-            const thumbImages = Array.from(card.querySelectorAll('.thumb-item')).map(img => img.src);
-            const uniqueThumbImages = thumbImages.filter(src => src !== mainImageSrc);
-            const allImages = [mainImageSrc, ...uniqueThumbImages];
-            const productData = {
-                id: card.dataset.productId || card.querySelector('h3').textContent,
-                name: card.querySelector('h3').textContent,
-                price: card.querySelector('.price').textContent,
-                images: allImages,
-                category: card.dataset.gender ? `القسم: ${card.dataset.gender} - ${card.dataset.category || ''}` : 'القسم: ملابس',
-                sizes: card.dataset.size ? card.dataset.size.split(',') : ['M', 'L', 'XL'],
-                colors: card.dataset.color ? card.dataset.color.split(',') : ['أسود'],
-                desc: "خامة عالية الجودة مريحة جداً للاستخدام اليومي، تصميم عصري يناسب جميع الأذواق."
-            };
-            localStorage.setItem('selectedProduct', JSON.stringify(productData));
-        });
+    // استخدام Event Delegation لدعم المنتجات المضافة ديناميكياً وحل تعارض الكاروت
+    document.addEventListener('click', (e) => {
+        const detailBtn = e.target.closest('.product-card .btn-small');
+        if (!detailBtn) return;
+
+        const card = detailBtn.closest('.product-card');
+        if (!card) return;
+
+        const mainImg = card.querySelector('.main-card-img');
+        const title = card.querySelector('h3');
+        const price = card.querySelector('.price');
+
+        const mainImageSrc = mainImg ? mainImg.src : '';
+        const thumbImages = Array.from(card.querySelectorAll('.thumb-item')).map(img => img.src);
+        const uniqueThumbImages = thumbImages.filter(src => src !== mainImageSrc);
+        
+        const productData = {
+            id: card.dataset.productId || (title ? title.textContent : Date.now()),
+            name: title ? title.textContent : 'منتج غير مسمى',
+            price: price ? price.textContent : '0 جنيه',
+            images: uniqueThumbImages.length > 0 ? [mainImageSrc, ...uniqueThumbImages] : [mainImageSrc],
+            category: card.dataset.gender ? `القسم: ${card.dataset.gender} - ${card.dataset.category || ''}` : 'القسم: ملابس',
+            sizes: card.dataset.size ? card.dataset.size.split(',') : ['M', 'L', 'XL'],
+            colors: card.dataset.color ? card.dataset.color.split(',') : ['أسود'],
+            desc: "خامة عالية الجودة مريحة جداً للاستخدام اليومي، تصميم عصري يناسب جميع الأذواق."
+        };
+        localStorage.setItem('selectedProduct', JSON.stringify(productData));
     });
 
     if (window.location.pathname.includes('product-detail.html')) {
@@ -318,7 +342,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const detailThumbs = productDetailThumbBar.querySelectorAll('.thumb-item');
                     detailThumbs.forEach(thumb => {
                         thumb.addEventListener('click', function() {
+                            // تأثير تلاشي بسيط عند تغيير الصورة
+                            mainProductImgEl.style.opacity = '0.5';
                             mainProductImgEl.src = this.src;
+                            setTimeout(() => mainProductImgEl.style.opacity = '1', 50);
+                            
                             detailThumbs.forEach(t => t.classList.remove('active'));
                             this.classList.add('active');
                         });
@@ -365,8 +393,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 cart.push(product);
             }
             localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCountDisplay();
-            alert('تم إضافة المنتج إلى السلة بنجاح!');
+            updateCartCountDisplay(); // تحديث عداد السلة
+            showToast('تم إضافة المنتج إلى السلة بنجاح!');
             window.location.href = 'cart.html';
         });
     }
@@ -440,11 +468,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (existingProductIndex > -1) {
             wishlist.splice(existingProductIndex, 1);
             added = false;
-            alert('تمت إزالة المنتج من قائمة الأمنيات.');
+            showToast('تمت إزالة المنتج من قائمة الأمنيات.', 'success'); // يمكن تغيير النوع إلى 'info'
         } else {
             wishlist.push(productData);
             added = true;
-            alert('تمت إضافة المنتج إلى قائمة الأمنيات.');
+            showToast('تمت إضافة المنتج إلى قائمة الأمنيات.', 'success');
         }
         saveWishlist(wishlist);
         updateWishlistCountDisplay();
@@ -658,7 +686,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const shippingCost = govSelect ? (shippingRates[govSelect.value] || 0) : 0;
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             if (cart.length === 0) {
-                alert('سلة المشتريات فارغة!');
+                showToast('سلة المشتريات فارغة!', 'error');
                 return;
             }
             let message = `*طلب جديد من متجر مودة (MODA Store)*\n\n*البيانات الشخصية:*\n👤 الاسم: ${name}\n📞 الهاتف: ${phone}\n📍 المحافظة: ${governorate}\n🏠 العنوان: ${address}\n\n*المنتجات المطلوبة:*\n`;
@@ -669,10 +697,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 message += `${index + 1}. ${item.name} (الكمية: ${item.quantity} × ${item.price} ج) = ${itemTotal} ج\n`;
             });
             message += `\n💵 المجموع: ${subtotal} ج\n📦 الشحن: ${shippingCost} ج\n*💰 الإجمالي: ${subtotal + shippingCost} ج*`;
-            const shopWhatsApp = '201234567890';
+            const shopWhatsApp = '201234567890'; // استبدل برقم الواتساب الخاص بك
             window.open(`https://wa.me/${shopWhatsApp}?text=${encodeURIComponent(message)}`, '_blank');
             localStorage.removeItem('cart');
-            alert('تم التوجيه إلى واتساب!');
+            showToast('تم التوجيه إلى واتساب لإتمام الطلب!', 'success');
             window.location.href = 'index.html';
         });
     }
@@ -756,7 +784,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
 
             if (!currentBase64Image) {
-                alert('يرجى اختيار صورة للمنتج');
+                showToast('يرجى اختيار صورة للمنتج', 'error');
                 return;
             }
 
@@ -785,7 +813,7 @@ document.addEventListener('DOMContentLoaded', () => {
             addProductForm.reset();
             document.getElementById('product-form-modal').style.display = 'none';
             renderAdminProducts();
-            alert(index === "-1" ? 'تم إضافة المنتج بنجاح!' : 'تم تحديث المنتج بنجاح!');
+            showToast(index === "-1" ? 'تم إضافة المنتج بنجاح!' : 'تم تحديث المنتج بنجاح!', 'success');
         });
     }
 

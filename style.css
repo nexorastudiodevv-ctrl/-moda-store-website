@@ -420,16 +420,17 @@ img:not([loading="lazy"]) {
 .product-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    column-gap: 20px;
+    row-gap: 10px;
 }
 .category-card,
 .product-card {
     background: transparent;
     padding: 0;
     text-align: right; /* محاذاة النص لليمين مثل المواقع العربية الاحترافية */
-    transition: box-shadow 0.3s ease, transform 0.3s ease; /* Transition for hover effects */
+    transition: box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     border: none;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05); /* ظل أنعم */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     cursor: pointer;
     position: relative;
     overflow: hidden;
@@ -438,8 +439,8 @@ img:not([loading="lazy"]) {
 }
 
 .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
 }
 
 /* تأثيرات عند التفاعل مع فئات المنتجات */
@@ -635,8 +636,22 @@ img:not([loading="lazy"]) {
 
 .thumb-bar {
     display: flex;
-    gap: 4px;
+    gap: 8px;
     margin-top: 6px;
+}
+
+/* تحسين شريط الصور في صفحة التفاصيل */
+.product-detail-thumb-bar {
+    overflow-x: auto;
+    padding: 10px 0;
+    scrollbar-width: none; /* لإخفاء الشريط في فيرفوكس */
+    -ms-overflow-style: none; /* لإخفاء الشريط في إيدج */
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.product-detail-thumb-bar::-webkit-scrollbar {
+    display: none; /* لإخفاء الشريط في كروم وسافاري */
 }
 
 .thumb-item {
@@ -647,6 +662,14 @@ img:not([loading="lazy"]) {
     border: 1px solid transparent;
     opacity: 0.6;
     transition: var(--transition);
+}
+
+.product-detail-thumb-bar .thumb-item {
+    flex: 0 0 80px; /* عرض ثابت للصور المصغرة للسماح بالتمرير الأفقي */
+    height: 80px;
+    scroll-snap-align: start;
+    border-radius: 6px;
+    opacity: 0.5;
 }
 
 .thumb-item.active,
@@ -660,6 +683,38 @@ img:not([loading="lazy"]) {
     font-weight: 700;
     margin: 5px 0;
     font-size: 16px;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-right: 8px;
+    font-weight: 400;
+}
+
+.product-rating {
+    color: #ffc107;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.product-rating span {
+    color: var(--text-muted);
+    margin-right: 5px;
+}
+
+.color-swatches-preview {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.swatch-small {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.1);
 }
 
 /* Wishlist Count in Header */
@@ -1065,6 +1120,13 @@ img:not([loading="lazy"]) {
 
 /* --- التجاوب مع الشاشات الصغيرة (Responsive Design) --- */
 
+/* الشاشات المتوسطة (Tablets) */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
     .shop-container {
         grid-template-columns: 1fr;
@@ -1375,7 +1437,9 @@ img:not([loading="lazy"]) {
 .admin-table {
     background: white;
     border-radius: 12px;
-    overflow: hidden;
+    overflow-x: auto;
+    display: block;
+    width: 100%;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
@@ -1423,6 +1487,37 @@ img:not([loading="lazy"]) {
     font-size: 14px;
 }
 
+/* --- Admin Modal Styles --- */
+.product-form-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none; /* يتم التحكم به عبر JS */
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: var(--bg-color);
+    padding: 25px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.admin-form-group {
+    margin-bottom: 15px;
+    text-align: right;
+}
+
 @media (max-width: 768px) {
     .admin-wrapper {
         flex-direction: column;
@@ -1432,6 +1527,32 @@ img:not([loading="lazy"]) {
         height: auto;
         position: relative;
     }
+    .admin-nav {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        gap: 5px;
+    }
+    .admin-nav a {
+        white-space: nowrap;
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+    .admin-main {
+        padding: 15px;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    .stat-card {
+        padding: 15px;
+        flex-direction: column;
+        text-align: center;
+    }
+    .stat-card i {
+        font-size: 24px;
+    }
     .mobile-admin-link {
         display: flex;
         align-items: center;
@@ -1439,4 +1560,34 @@ img:not([loading="lazy"]) {
         color: var(--accent-color);
         font-size: 18px;
     }
+}
+
+/* --- Toast Notification Styles --- */
+.toast-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4CAF50; /* Green for success */
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    z-index: 2000;
+}
+
+.toast-notification.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.toast-notification.error {
+    background-color: #f44336; /* Red for error */
 }
