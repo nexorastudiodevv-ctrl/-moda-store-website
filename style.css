@@ -783,6 +783,9 @@ img.loaded {
     border: none;
     cursor: pointer;
     color: var(--primary-color);
+    padding: 10px;
+    /* زيادة مساحة النقر للهواتف */
+    z-index: 1001;
 }
 
 .side-menu {
@@ -800,10 +803,13 @@ img.loaded {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    visibility: hidden;
+    /* منع التداخل مع اللمس وهي مغلقة */
 }
 
 .side-menu.active {
     right: 0;
+    visibility: visible;
 }
 
 .side-menu-overlay {

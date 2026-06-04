@@ -429,8 +429,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const productCards = document.querySelectorAll('.product-card'); // All product cards
+    const productsListing = document.getElementById('products-listing');
+
     const updateMasterFilter = () => {
-        const productCards = document.querySelectorAll('.product-card');
+        if (!productsListing) return; // لا يعمل إلا في صفحة المنتجات
+
         const sectionsProducts = { 'mens-section': [], 'womens-section': [] };
         let totalVisible = 0;
 
@@ -456,7 +459,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isVisible) {
                 totalVisible++;
                 const sectionId = card.closest('section')?.id;
-                if (sectionId) sectionsProducts[sectionId].push(card);
+                if (sectionId && sectionsProducts[sectionId]) {
+                    sectionsProducts[sectionId].push(card);
+                }
             }
         });
 
@@ -595,8 +600,21 @@ document.addEventListener('DOMContentLoaded', () => {
         updateMasterFilter();
     });
 
+    // وظيفة Debounce لمنع تكرار التنفيذ الثقيل مع كل نقرة زر أو حرف
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
     const searchInp = document.getElementById('search-input');
-    if (searchInp) searchInp.addEventListener('input', (e) => { filters.search = e.target.value.toLowerCase(); updateMasterFilter(); });
+    if (searchInp) searchInp.addEventListener('input', debounce((e) => { filters.search = e.target.value.toLowerCase(); updateMasterFilter(); }, 300));
 
     const sortSel = document.getElementById('sort-select');
     if (sortSel) sortSel.addEventListener('change', (e) => { filters.sort = e.target.value; updateMasterFilter(); });
