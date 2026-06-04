@@ -1294,6 +1294,8 @@ img:not([loading="lazy"]) {
 .admin-body {
     background-color: #f0f2f5;
     margin: 0;
+    display: block !important; /* ضمان عدم تأثر الجسم بأي إعدادات إخفاء */
+    min-height: 100vh;
 }
 
 .admin-wrapper {
@@ -1343,6 +1345,11 @@ img:not([loading="lazy"]) {
     margin-bottom: 30px;
 }
 
+.admin-section {
+    display: block; /* ضمان ظهور الأقسام */
+    margin-bottom: 40px;
+}
+
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1384,6 +1391,11 @@ img:not([loading="lazy"]) {
     margin-bottom: 20px;
 }
 
+/* إظهار زر لوحة التحكم في الهيدر حتى في الجوال */
+.mobile-admin-link {
+    display: none;
+}
+
 /* تحسين شكل رفع الملفات */
 .file-upload-wrapper {
     border: 2px dashed var(--border-color);
@@ -1419,5 +1431,12 @@ img:not([loading="lazy"]) {
         width: 100%;
         height: auto;
         position: relative;
+    }
+    .mobile-admin-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent-color);
+        font-size: 18px;
     }
 }
