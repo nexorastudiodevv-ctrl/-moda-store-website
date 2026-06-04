@@ -676,4 +676,260 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'index.html';
         });
     }
+
+    // --- 16. منطق لوحة التحكم (Admin Panel Logic) ---
+    const adminProductsList = document.getElementById('admin-products-list');
+    const addProductForm = document.getElementById('admin-add-product-form');
+
+    // متغيرات التعامل مع الصورة المرفوعة
+    const imageFileInput = document.getElementById('p-image-file');
+    const previewImg = document.getElementById('p-preview-img');
+    const uploadPlaceholder = document.getElementById('upload-placeholder');
+    let currentBase64Image = "";
+
+    if (imageFileInput) {
+        imageFileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentBase64Image = e.target.result;
+                    if (previewImg) {
+                        previewImg.src = currentBase64Image;
+                        previewImg.style.display = 'inline-block';
+                        if (uploadPlaceholder) uploadPlaceholder.style.display = 'none';
+                    }
+                };
+                reader.readAsDataURL(file);
+            } else {
+                currentBase64Image = "";
+                if (previewImg) previewImg.style.display = 'none';
+                if (uploadPlaceholder) uploadPlaceholder.style.display = 'block';
+            }
+        });
+    }
+
+    window.openAddModal = () => {
+        if (!addProductForm) return;
+        addProductForm.reset();
+        document.getElementById('p-index').value = "-1";
+        document.getElementById('modal-title').textContent = "إضافة منتج";
+        document.getElementById('submit-btn').textContent = "حفظ المنتج";
+        currentBase64Image = "";
+        if (previewImg) {
+            previewImg.src = "";
+            previewImg.style.display = 'none';
+        }
+        if (uploadPlaceholder) uploadPlaceholder.style.display = 'block';
+        document.getElementById('product-form-modal').style.display = 'flex';
+    };
+
+    // تحميل المنتجات المضافة يدوياً
+    function getStoredProducts() {
+        return JSON.parse(localStorage.getItem('custom_products')) || [];
+    }
+
+    function renderAdminProducts() {
+        if (!adminProductsList) return;
+        const products = getStoredProducts();
+        adminProductsList.innerHTML = products.map((p, index) => `
+            <tr>
+                <td><img src="${p.image}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;"></td>
+                <td>${p.name}</td>
+                <td>${p.price} ج.م</td>
+                <td>${p.category || 'عام'}</td>
+                <td>
+                    <button onclick="editProduct(${index})" class="icon-btn" style="color: #2196F3; margin-left: 10px;"><i class="fas fa-edit"></i></button>
+                    <button onclick="deleteProduct(${index})" class="cart-remove-btn"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+        `).join('');
+        
+        // تحديث الإحصائيات
+        if(document.getElementById('total-products-stat')) {
+            document.getElementById('total-products-stat').textContent = products.length;
+        }
+    }
+
+    if (addProductForm) {
+        addProductForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (!currentBase64Image) {
+                alert('يرجى اختيار صورة للمنتج');
+                return;
+            }
+
+            const index = document.getElementById('p-index').value;
+            const products = getStoredProducts();
+            
+            const productData = {
+                name: document.getElementById('p-name').value,
+                price: document.getElementById('p-price').value,
+                image: currentBase64Image,
+                category: document.getElementById('p-category').value
+            };
+
+            if (index === "-1") {
+                // إضافة منتج جديد
+                productData.id = 'custom-' + Date.now();
+                products.push(productData);
+            } else {
+                // تعديل منتج موجود
+                productData.id = products[index].id;
+                products[index] = productData;
+            }
+
+            localStorage.setItem('custom_products', JSON.stringify(products));
+            
+            addProductForm.reset();
+            document.getElementById('product-form-modal').style.display = 'none';
+            renderAdminProducts();
+            alert(index === "-1" ? 'تم إضافة المنتج بنجاح!' : 'تم تحديث المنتج بنجاح!');
+        });
+    }
+
+    window.editProduct = (index) => {
+        const products = getStoredProducts();
+        const product = products[index];
+        
+        document.getElementById('p-index').value = index;
+        document.getElementById('p-name').value = product.name;
+        document.getElementById('p-price').value = product.price;
+        document.getElementById('p-category').value = product.category || 'تيشيرتات';
+        
+        currentBase64Image = product.image;
+        if (previewImg) {
+            previewImg.src = product.image;
+            previewImg.style.display = 'inline-block';
+            if (uploadPlaceholder) uploadPlaceholder.style.display = 'none';
+        }
+        
+        document.getElementById('modal-title').textContent = "تعديل المنتج";
+        document.getElementById('submit-btn').textContent = "تحديث المنتج";
+        
+        document.getElementById('product-form-modal').style.display = 'flex';
+    };
+
+    window.deleteProduct = (index) => {
+        if(confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+            const products = getStoredProducts();
+            products.splice(index, 1);
+            localStorage.setItem('custom_products', JSON.stringify(products));
+            renderAdminProducts();
+        }
+    };
+
+    // تحديث إحصائيات الطلبات (افتراضي)
+    const totalOrdersStat = document.getElementById('total-orders-stat');
+    if (totalOrdersStat) {
+        // في الواقع يتم جلب هذا من قاعدة البيانات، هنا نستخدم قيمة تجريبية
+        totalOrdersStat.textContent = Math.floor(Math.random() * 50);
+    }
+
+    renderAdminProducts();
+
+    // --- 17. عرض المنتجات المضافة من لوحة التحكم في الصفحة الرئيسية ---
+    function displayCustomProductsOnSite() {
+        if (window.location.pathname.includes('admin.html')) return;
+
+        const customProducts = JSON.parse(localStorage.getItem('custom_products')) || [];
+
+        customProducts.forEach(product => {
+            const productHTML = `
+                <div class="product-card" data-product-id="${product.id}">
+                    <div class="product-image-gallery">
+                        <img src="${product.image}" class="main-card-img" alt="${product.name}" loading="lazy">
+                    </div>
+                    <div class="product-card-body">
+                        <p class="brand-name">تشكيلة مودة</p>
+                        <h3>${product.name}</h3>
+                        <button class="wishlist-btn">❤</button>
+                        <p class="price">${product.price} جنيه</p>
+                        <a href="product-detail.html" class="btn-small"> عرض المنتج </a>
+                    </div>
+                </div>
+            `;
+
+            // 1. محاولة العثور على الشبكة المخصصة لهذه الفئة (مثلاً: أحذية)
+            const specificGrid = document.querySelector(`.product-grid[data-category-grid="${product.category}"]`);
+            if (specificGrid) {
+                specificGrid.insertAdjacentHTML('afterbegin', productHTML);
+            }
+
+            // 2. إضافة المنتج أيضاً إلى الشبكة العامة "الأكثر مبيعاً" (Featured)
+            const featuredGrid = document.querySelector('.product-grid[data-category-grid="featured"]');
+            if (featuredGrid) {
+                featuredGrid.insertAdjacentHTML('afterbegin', productHTML);
+            }
+        });
+    }
+
+    displayCustomProductsOnSite();
+
+    // --- 18. تفعيل روابط لوحة التحكم (Admin Navigation) ---
+    const adminNavLinks = document.querySelectorAll('.admin-nav a');
+    const adminSections = document.querySelectorAll('.admin-section');
+
+    if (adminNavLinks.length > 0 && adminSections.length > 0) {
+        // دالة لتحديد الرابط النشط في القائمة الجانبية
+        const setActiveLink = (id) => {
+            adminNavLinks.forEach(link => {
+                link.classList.remove('active');
+                // تأكد أن الرابط ليس "عرض الموقع" قبل إضافة الفئة النشطة
+                if (link.getAttribute('href') === `#${id}`) {
+                    link.classList.add('active');
+                }
+            });
+        };
+
+        // معالج النقر على روابط القائمة الجانبية
+        adminNavLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                // إذا كان الرابط داخلياً (يبدأ بـ #)
+                if (href.startsWith('#')) {
+                    e.preventDefault(); // منع السلوك الافتراضي (القفز المفاجئ)
+                    const targetId = href.substring(1); // استخراج الـ ID من الرابط
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth' }); // التمرير السلس
+                        setActiveLink(targetId); // تحديث الرابط النشط
+                        history.pushState(null, '', href); // تحديث الـ URL دون إعادة تحميل الصفحة
+                    }
+                }
+                // إذا كان الرابط خارجياً (مثل index.html)، فسيتم التعامل معه بالسلوك الافتراضي للمتصفح
+            });
+        });
+
+        // Intersection Observer لتحديث الرابط النشط عند التمرير
+        const observerOptions = {
+            root: null, // مراقبة بالنسبة لمنفذ العرض (viewport)
+            rootMargin: '0px',
+            threshold: 0.5 // يعتبر العنصر مرئياً إذا كان 50% منه على الأقل داخل منفذ العرض
+        };
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setActiveLink(entry.target.id);
+                }
+            });
+        }, observerOptions);
+
+        adminSections.forEach(section => {
+            sectionObserver.observe(section);
+        });
+
+        // تعيين الرابط النشط الأولي عند تحميل الصفحة (بناءً على الـ hash في الـ URL أو الافتراضي)
+        const initialHash = window.location.hash.substring(1);
+        if (initialHash && document.getElementById(initialHash)) {
+            setActiveLink(initialHash);
+            // التمرير إلى القسم إذا تم تحميل الصفحة بـ hash معين
+            document.getElementById(initialHash).scrollIntoView({ behavior: 'smooth' });
+        } else {
+            setActiveLink('stats'); // تعيين "الإحصائيات" كقسم نشط افتراضي
+        }
+    }
+
 });

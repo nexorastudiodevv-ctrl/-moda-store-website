@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - متجر مودة</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="logo">MODA ADMIN</div>
+            <nav class="admin-nav">
+                <a href="#stats" class="active"><i class="fas fa-chart-line"></i> الإحصائيات</a>
+                <a href="#products"><i class="fas fa-box"></i> إدارة المنتجات</a>
+                <a href="#orders"><i class="fas fa-shopping-bag"></i> الطلبات</a>
+                <a href="index.html"><i class="fas fa-external-link-alt"></i> عرض الموقع</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>لوحة التحكم</h1>
+                <div class="admin-user">أهلاً، المسؤول 👋</div>
+            </header>
+
+            <!-- Stats Section -->
+            <section id="stats" class="admin-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-box"></i>
+                        <div class="stat-info">
+                            <span id="total-products-stat">0</span>
+                            <p>إجمالي المنتجات</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div class="stat-info">
+                            <span id="total-orders-stat">0</span>
+                            <p>إجمالي الطلبات</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Products Management -->
+            <section id="products" class="admin-section">
+                <div class="section-header">
+                    <h2>إدارة المنتجات</h2>
+                    <button class="btn" onclick="openAddModal()">+ إضافة منتج جديد</button>
+                </div>
+                <table class="cart-table admin-table">
+                    <thead>
+                        <tr>
+                            <th>الصورة</th>
+                            <th>الاسم</th>
+                            <th>السعر</th>
+                            <th>الفئة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-products-list">
+                        <!-- تظهر المنتجات هنا -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Orders Management -->
+            <section id="orders" class="admin-section">
+                <h2>إدارة الطلبات</h2>
+                <p>هنا ستظهر قائمة الطلبات.</p>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Add Product -->
+    <div id="product-form-modal" class="side-menu-overlay" style="display:none; justify-content:center; align-items:center;">
+        <div class="checkout-container" style="background: white; width: 90%; max-width: 500px; position: relative;">
+            <button onclick="this.parentElement.parentElement.style.display='none'" style="position:absolute; left:10px; top:10px; border:none; background:none; cursor:pointer; font-size:20px;">✕</button>
+            <h2 class="section-title" id="modal-title">إضافة منتج</h2>
+            <form id="admin-add-product-form">
+                <input type="hidden" id="p-index" value="-1">
+                <div class="form-group">
+                    <label>اسم المنتج</label>
+                    <input type="text" id="p-name" required>
+                </div>
+                <div class="form-group">
+                    <label>السعر (جنيه)</label>
+                    <input type="number" id="p-price" required>
+                </div>
+                <div class="form-group">
+                    <label>الفئة</label>
+                    <select id="p-category" required>
+                        <option value="تيشيرتات">تيشيرتات</option>
+                        <option value="قمصان">قمصان</option>
+                        <option value="بناطيل">بناطيل</option>
+                        <option value="أحذية">أحذية</option>
+                        <option value="إكسسوارات">إكسسوارات</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>صورة المنتج</label>
+                    <div class="file-upload-wrapper" onclick="document.getElementById('p-image-file').click()">
+                        <input type="file" id="p-image-file" accept="image/*" style="display: none;">
+                        <div id="upload-placeholder">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>اضغط هنا لاختيار صورة</p>
+                        </div>
+                        <img id="p-preview-img" src="" alt="Preview" style="display: none; width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px;">
+                    </div>
+                </div>
+                <button type="submit" id="submit-btn" class="btn" style="width: 100%">حفظ المنتج</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

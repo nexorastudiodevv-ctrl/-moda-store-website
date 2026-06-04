@@ -3,15 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>متجر مودة - أحدث صيحات الموضة والملابس العربية</title>
+    <title>متجر مودة | تسوق أحدث الملابس العصرية بأفضل الأسعار في مصر</title>
     <meta
       name="description"
-      content="اكتشف أحدث تشكيلات الملابس الصيفية والشتوية في متجر مودة. تسوق التيشيرتات، القمصان، والبنطلونات بأفضل الأسعار وأعلى جودة."
+      content="اكتشف تشكيلة متجر مودة الحصرية: تيشيرتات، قمصان، وبنطلونات صيفية وشتوية بجودة عالية. توصيل سريع لجميع المحافظات. اشترك الآن للحصول على خصومات حصرية."
     />
     <meta
       name="keywords"
-      content="ملابس, موضة, متجر إلكتروني, تيشيرتات, قمصان, أزياء عربية, تسوق أونلاين"
+      content="ملابس رجالي, أزياء حريمي, تيشيرتات قطن, تسوق أونلاين مصر, موضة 2026, ملابس كاجوال, متجر مودة"
     />
+    <link rel="canonical" href="https://yourdomain.com/" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Preload Critical Fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" as="style">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -30,19 +35,34 @@
     <meta name="twitter:title" content="متجر مودة - أحدث صيحات الموضة" />
 
     <!-- JSON-LD for Organization -->
-    <script type="application/ld+json">
+    <script type="application/ld+json"> [
       {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "متجر مودة - MODA Store",
-        "url": "https://yourdomain.com",
-        "logo": "https://yourdomain.com/logo.png",
-        "sameAs": [
-          "https://facebook.com/modastore",
-          "https://instagram.com/modastore"
-        ]
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "متجر مودة - MODA Store",
+          "url": "https://yourdomain.com",
+          "logo": "https://yourdomain.com/logo.png",
+          "description": "متجر رائد لبيع الملابس العصرية في الوطن العربي",
+          "address": {
+              "@type": "PostalAddress",
+              "addressCountry": "EG"
+          },
+          "sameAs": [
+            "https://facebook.com/modastore",
+            "https://instagram.com/modastore"
+          ]
+      },
+      {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "url": "https://yourdomain.com",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://yourdomain.com/products.html?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
       }
-    </script>
+    ] </script>
 
     <link rel="stylesheet" href="style.css" />
     <link
@@ -80,6 +100,8 @@
           <a href="#" class="nav-link-sale">التخفيضات</a>
 
           <a href="contact.html">تواصل معنا</a>
+
+          <a href="admin.html" style="color: var(--accent-color); font-weight: bold;"><i class="fas fa-user-shield"></i> لوحة التحكم</a>
         </nav>
 
         <div class="header-actions">
@@ -105,6 +127,7 @@
       <a href="#" class="nav-link-sale">🔥 التخفيضات</a>
       <a href="wishlist.html">❤ قائمة الأمنيات</a>
       <a href="#">📞 تواصل معنا</a>
+      <a href="admin.html">⚙️ إعدادات المتجر (Admin)</a>
     </div>
 
     <!-- Hero Section -->
@@ -217,7 +240,8 @@
       <div class="container">
         <h2 class="section-title">الأكثر مبيعاً</h2>
 
-        <div class="product-grid">
+        <!-- شبكة المنتجات العامة (المميزة) -->
+        <div class="product-grid" data-category-grid="featured">
           <div class="product-card">
             <span class="product-badge badge-new">جديد</span>
             <div class="product-image-gallery">
@@ -347,6 +371,14 @@
             <p class="price">499 جنيه</p>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- قسم مخصص للأحذية (سيظهر فيه ما تضيفه من لوحة التحكم كـ "أحذية") -->
+    <section class="products">
+      <div class="container">
+        <h2 class="section-title">قسم الأحذية</h2>
+        <div class="product-grid" data-category-grid="أحذية"></div>
       </div>
     </section>
 
