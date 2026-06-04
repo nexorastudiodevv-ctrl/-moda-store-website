@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إتمام الدفع - Moda Store</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link rel="stylesheet" href="style.css" />
@@ -29,11 +30,13 @@
         margin-bottom: 8px;
         font-weight: 600;
       }
-      .form-group input {
+      .form-group input, .form-group select {
         width: 100%;
         padding: 12px;
         border: 1px solid #ddd;
         border-radius: 4px;
+        background-color: var(--bg-color);
+        color: var(--primary-color);
       }
     </style>
   </head>
@@ -42,6 +45,12 @@
       <div class="container">
         <button class="menu-toggle">☰</button>
         <div class="logo">MODA</div>
+        <div class="header-actions">
+          <a href="wishlist.html" class="icon-btn">❤ <span id="wishlist-count">0</span></a>
+          <a href="cart.html" class="icon-btn cart-icon-btn">
+            🛒 <span id="cart-count">0</span>
+          </a>
+        </div>
       </div>
     </header>
 
@@ -55,28 +64,46 @@
       <a href="products.html#womens-section">👩 قسم النساء</a>
       <a href="products.html?filter=new">✨ وصل حديثاً</a>
       <a href="#">🔥 التخفيضات</a>
+      <a href="wishlist.html">❤ قائمة الأمنيات</a>
       <a href="#">📞 تواصل معنا</a>
     </div>
 
     <main class="container">
       <div class="checkout-container">
         <h2 class="section-title">بيانات الشحن والدفع</h2>
-        <form>
+        <form id="checkout-form">
           <div class="form-group">
             <label>الاسم بالكامل</label>
-            <input type="text" placeholder="أدخل اسمك الثلاثي" required />
+            <input type="text" id="customer-name" placeholder="أدخل اسمك الثلاثي" required />
           </div>
           <div class="form-group">
             <label>رقم الهاتف</label>
-            <input type="tel" placeholder="01xxxxxxxxx" required />
+            <input type="tel" id="customer-phone" placeholder="01xxxxxxxxx" required />
+          </div>
+          <div class="form-group">
+            <label>المحافظة</label>
+            <select id="customer-governorate" required>
+              <option value="" disabled selected>اختر المحافظة</option>
+              <option value="cairo">القاهرة (30 ج.م)</option>
+              <option value="giza">الجيزة (35 ج.م)</option>
+              <option value="alex">الإسكندرية (50 ج.م)</option>
+              <option value="others">باقي المحافظات (70 ج.م)</option>
+            </select>
           </div>
           <div class="form-group">
             <label>العنوان بالتفصيل</label>
             <input
               type="text"
+              id="customer-address"
               placeholder="المحافظة، المدينة، الشارع"
               required
             />
+          </div>
+          <div id="order-summary" style="margin: 20px 0; padding: 15px; background: var(--bg-light); border-radius: 4px;">
+            <p>المجموع الفرعي: <span id="subtotal-amount">0</span> جنيه</p>
+            <p>تكلفة الشحن: <span id="shipping-amount">0</span> جنيه</p>
+            <hr style="margin: 10px 0; border: 0; border-top: 1px solid var(--border-color);">
+            <p><strong>الإجمالي الكلي: <span id="final-total-amount">0</span> جنيه</strong></p>
           </div>
           <button type="submit" class="btn" style="width: 100%">
             تأكيد الطلب

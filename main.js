@@ -1,95 +1,62 @@
-let slideIndex = 1;
-let touchStartX = 0;
-let touchEndX = 0;
+/**
+ * MODA Store - Main JS
+ * تم كتابة الكود بطريقة دفاعية لمنع توقف الصفحة في حال غياب بعض العناصر
+ */
 
-function showSlides(n) {
-    let slides = document.getElementsByClassName("slide");
-    let dots = document.getElementsByClassName("dot");
-    if (slides.length === 0) return;
+// --- الدوال المساعدة العامة (تعريفها في المستوى الأعلى لتكون متاحة لجميع الكتل) ---
 
-    if (n > slides.length) { slideIndex = 1 }
-    if (n < 1) { slideIndex = slides.length }
-
-    for (let i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";
-    }
-    for (let i = 0; i < dots.length; i++) {
-        dots[i].classList.remove("active");
-    }
-
-    slides[slideIndex - 1].style.display = "flex";
-    if (dots.length > 0) {
-        dots[slideIndex - 1].classList.add("active");
+function updateCartCountDisplay() {
+    const cartCountElement = document.getElementById('cart-count');
+    if (cartCountElement) {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCountElement.textContent = totalItems;
     }
 }
 
-function changeSlide(n) {
-    showSlides(slideIndex += n);
+function getWishlist() {
+    return JSON.parse(localStorage.getItem('wishlist')) || [];
 }
 
-function currentSlide(n) {
-    showSlides(slideIndex = n);
+function saveWishlist(wishlist) {
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
 }
 
-function handleGesture() {
-    // إذا كانت المسافة المقطوعة أكبر من 50 بكسل، نعتبرها سحبة (Swipe)
-    if (touchEndX < touchStartX - 50) {
-        // سحب لليسار: عرض الشريحة التالية (في اتجاه القراءة العربي)
-        changeSlide(1);
+function updateWishlistCountDisplay() {
+    const wishlistCountElement = document.getElementById('wishlist-count');
+    if (wishlistCountElement) {
+        const wishlist = getWishlist();
+        wishlistCountElement.textContent = wishlist.length;
     }
-    if (touchEndX > touchStartX + 50) {
-        // سحب لليمين: عرض الشريحة السابقة
-        changeSlide(-1);
+}
+
+function isProductInWishlist(productId) {
+    const wishlist = getWishlist();
+    return wishlist.some(item => item.id === productId);
+}
+
+function updateWishlistButtonState(buttonElement, productId) {
+    if (buttonElement) {
+        if (isProductInWishlist(productId)) {
+            buttonElement.classList.add('active');
+        } else {
+            buttonElement.classList.remove('active');
+        }
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("تم تحميل متجر MODA بنجاح!");
+    // تحديث العدادات عند جاهزية الـ DOM
+    updateCartCountDisplay();
+    updateWishlistCountDisplay();
 
-    // منطق الظهور التدريجي للصور
-    const applyFadeIn = (imgList) => {
-        imgList.forEach(img => {
-            if (img.complete) {
-                img.classList.add('loaded');
-            } else {
-                img.addEventListener('load', () => {
-                    img.classList.add('loaded');
-                });
-                img.addEventListener('error', () => {
-                    img.classList.add('loaded');
-                });
-            }
-        });
-    };
-
-    applyFadeIn(document.querySelectorAll('img'));
-
-    showSlides(slideIndex);
-
-    const sliderContainer = document.querySelector('.slider-container');
-    if (sliderContainer) {
-        sliderContainer.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, { passive: true });
-
-        sliderContainer.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleGesture();
-        }, { passive: true });
-    }
-
-    // تغيير السلايد تلقائياً كل 5 ثوانٍ
-    setInterval(() => {
-        changeSlide(1);
-    }, 5000);
-
-    // Drawer Menu Toggle
+    // --- 1. القائمة الجانبية (Mobile Menu) ---
     const menuToggle = document.querySelector('.menu-toggle');
+    const closeMenu = document.querySelector('.close-menu');
     const sideMenu = document.querySelector('.side-menu');
     const overlay = document.querySelector('.side-menu-overlay');
-    const closeMenu = document.querySelector('.close-menu');
 
-    if (menuToggle && sideMenu && overlay && closeMenu) {
+    if (menuToggle && sideMenu && overlay) {
         const toggleMenu = () => {
             sideMenu.classList.toggle('active');
             overlay.classList.toggle('active');
@@ -97,580 +64,616 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         menuToggle.addEventListener('click', toggleMenu);
-        closeMenu.addEventListener('click', toggleMenu);
+        if (closeMenu) closeMenu.addEventListener('click', toggleMenu);
         overlay.addEventListener('click', toggleMenu);
+    }
 
-        // غلق القائمة عند النقر على أي رابط بداخلها
-        sideMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (sideMenu.classList.contains('active')) {
-                    toggleMenu();
-                }
-            });
+    // --- 2. وضع الليلي (Dark Mode) ---
+    const darkModeBtn = document.getElementById('dark-mode-toggle');
+    if (darkModeBtn) {
+        // التحقق من التفضيل المحفوظ
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            darkModeBtn.textContent = '☀️';
+        }
+
+        darkModeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            darkModeBtn.textContent = isDark ? '☀️' : '🌙';
         });
     }
 
-    // Zoom effect for product detail image on long press (mobile)
-    const mainProductImg = document.getElementById('main-product-img');
-    if (mainProductImg) {
-        let longPressTimer;
-        let isLongPress = false;
-        let isZoomed = false;
-        const longPressThreshold = 500; // milliseconds for long press
-        const moveThreshold = 10; // pixels for touchmove to cancel long press
+    // --- 3. السلايدر (Hero Slider) ---
+    let slideIndex = 1;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
 
-        let initialTouchX = 0;
-        let initialTouchY = 0;
-
-        const toggleZoom = (clientX, clientY) => {
-            isZoomed = !isZoomed;
-            mainProductImg.classList.toggle('zoomed', isZoomed);
-
-            if (isZoomed) {
-                const imgRect = mainProductImg.getBoundingClientRect();
-                const x = clientX - imgRect.left;
-                const y = clientY - imgRect.top;
-
-                const xPercent = (x / imgRect.width) * 100;
-                const yPercent = (y / imgRect.height) * 100;
-
-                mainProductImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
-            } else {
-                mainProductImg.style.transformOrigin = 'center center'; // Reset origin
-            }
+    if (slides.length > 0) {
+        const showSlides = (n) => {
+            if (n > slides.length) slideIndex = 1;
+            if (n < 1) slideIndex = slides.length;
+            
+            slides.forEach(s => s.style.display = "none");
+            dots.forEach(d => d.classList.remove('active'));
+            
+            slides[slideIndex - 1].style.display = "block";
+            if (dots[slideIndex - 1]) dots[slideIndex - 1].classList.add('active');
         };
 
-        mainProductImg.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 1) { // Only consider single touch for long press
-                initialTouchX = e.touches[0].clientX;
-                initialTouchY = e.touches[0].clientY;
-                isLongPress = false; // Reset flag
-                longPressTimer = setTimeout(() => {
-                    isLongPress = true;
-                    e.preventDefault(); // Prevent default context menu on long press
-                    toggleZoom(initialTouchX, initialTouchY);
-                }, longPressThreshold);
-            }
-        }, { passive: false }); // Use passive: false to allow preventDefault
+        // تعريف الدوال عالمياً لأن الـ HTML يستخدم onclick
+        window.changeSlide = (n) => showSlides(slideIndex += n);
+        window.currentSlide = (n) => showSlides(slideIndex = n);
 
-        mainProductImg.addEventListener('touchmove', (e) => {
-            if (longPressTimer && !isZoomed) { // If not yet zoomed, check for movement to cancel long press
-                const currentTouchX = e.touches[0].clientX;
-                const currentTouchY = e.touches[0].clientY;
-                const distanceMoved = Math.sqrt(
-                    Math.pow(currentTouchX - initialTouchX, 2) +
-                    Math.pow(currentTouchY - initialTouchY, 2)
-                );
+        showSlides(slideIndex);
+        
+        // تغيير تلقائي كل 5 ثواني
+        setInterval(() => window.changeSlide(1), 5000);
+    }
 
-                if (distanceMoved > moveThreshold) {
-                    clearTimeout(longPressTimer);
-                    isLongPress = false; // User is scrolling, not long pressing
+    // --- 4. نظام التحميل المتأخر المطور (Enhanced Lazy Loading) ---
+    // يشمل الصور العادية، صور الخلفية، والفيديوهات
+    const lazyObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = entry.target;
+
+                // التعامل مع صور الخلفية (data-bg)
+                if (target.dataset.bg) {
+                    target.style.backgroundImage = `url(${target.dataset.bg})`;
                 }
-            } else if (isZoomed && e.touches.length === 1) { // If zoomed, pan the image with touchmove
-                e.preventDefault(); // Prevent scrolling while panning zoomed image
-                toggleZoom(e.touches[0].clientX, e.touches[0].clientY); // Update origin to pan
-            }
-        }, { passive: false });
 
-        mainProductImg.addEventListener('touchend', (e) => {
-            clearTimeout(longPressTimer);
-            if (!isLongPress && isZoomed) { // If it was a short tap (not a long press) and already zoomed, unzoom
-                toggleZoom(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-            }
-            isLongPress = false; // Reset for next interaction
-        });
-    }
-    // --- Wishlist System ---
-    let wishlist = JSON.parse(localStorage.getItem('moda_wishlist')) || [];
-
-    const updateWishlistUI = () => {
-        // تحديث العداد في الهيدر
-        const countElem = document.getElementById('wishlist-count');
-        if (countElem) countElem.textContent = wishlist.length;
-
-        // مزامنة حالة الأزرار في الصفحة
-        document.querySelectorAll('.wishlist-btn, #detail-wishlist-btn').forEach(btn => {
-            let name = "";
-            if (btn.id === 'detail-wishlist-btn') {
-                name = document.getElementById('main-product-name')?.textContent;
-            } else {
-                name = btn.closest('.product-card')?.querySelector('h3')?.textContent;
-            }
-
-            if (name && wishlist.some(item => item.name === name)) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
-    };
-
-    const toggleWishlist = (product) => {
-        const index = wishlist.findIndex(item => item.name === product.name);
-        if (index > -1) {
-            wishlist.splice(index, 1);
-        } else {
-            wishlist.push(product);
-        }
-        localStorage.setItem('moda_wishlist', JSON.stringify(wishlist));
-        updateWishlistUI();
-    };
-
-    // حقن أزرار المفضلة في كروت المنتجات تلقائياً
-    const injectWishlistButtons = () => {
-        document.querySelectorAll('.product-card').forEach(card => {
-            if (!card.querySelector('.wishlist-btn')) {
-                const btn = document.createElement('button');
-                btn.className = 'wishlist-btn';
-                btn.innerHTML = '❤';
-                btn.onclick = (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const name = card.querySelector('h3').textContent;
-                    const price = card.querySelector('.price').textContent;
-                    const img = card.querySelector('img').src;
-                    toggleWishlist({ name, price, img });
-                };
-                card.appendChild(btn);
-            }
-        });
-    };
-
-    // --- نظام نقل بيانات المنتجات ديناميكياً ---
-
-    // 1. تحديث الروابط في صفحات القوائم (Home & Products)
-    const updateProductLinks = () => {
-        injectWishlistButtons(); // حقن الأزرار أولاً
-        const productCardsInListing = document.querySelectorAll('.product-card');
-        productCardsInListing.forEach(card => {
-            const link = card.querySelector('.btn-small');
-            if (link && link.getAttribute('href').includes('product-detail.html')) {
-                const name = card.querySelector('h3').textContent.trim();
-                const price = card.querySelector('.price').textContent.trim();
-                const imgSrc = card.querySelector('.main-card-img')?.src || card.querySelector('img:not(.thumb-item)').src;
-                const sizes = card.dataset.size || '';
-                const color = card.dataset.color || '';
-                const gender = card.dataset.gender || '';
-                // Determine category programmatically based on keywords in the name
-                const category = (name.includes("حذاء") || name.includes("بوت") || name.includes("سنيكرز") || name.includes("صندل") || name.includes("سليبر")) ? "أحذية" : "ملابس";
-
-                const detailUrl = `product-detail.html?name=${encodeURIComponent(name)}&price=${encodeURIComponent(price)}&img=${encodeURIComponent(imgSrc)}&sizes=${encodeURIComponent(sizes)}&color=${encodeURIComponent(color)}&category=${encodeURIComponent(category)}&gender=${encodeURIComponent(gender)}`;
-                link.setAttribute('href', detailUrl);
-            }
-        });
-    };
-
-    // --- منطق تبديل الصور في الجاليري المصغر داخل الكارت ---
-    const handleThumbInteraction = (e) => {
-        if (e.target.classList.contains('thumb-item')) {
-            const card = e.target.closest('.product-card');
-            const mainImg = card.querySelector('.main-card-img');
-            const link = card.querySelector('.btn-small');
-
-            if (mainImg && link) {
-                // تحديث الصورة الرئيسية
-                mainImg.src = e.target.src;
-
-                // تحديث الكلاس النشط (Active)
-                card.querySelectorAll('.thumb-item').forEach(thumb => thumb.classList.remove('active'));
-                e.target.classList.add('active');
-
-                // تحديث رابط صفحة التفاصيل ديناميكياً ليشمل الصورة الجديدة
-                const name = card.querySelector('h3').textContent.trim();
-                const price = card.querySelector('.price').textContent.trim();
-                const sizes = card.dataset.size || '';
-                const color = card.dataset.color || '';
-                const category = (name.includes("حذاء") || name.includes("بوت") || name.includes("سنيكرز") || name.includes("صندل") || name.includes("سليبر")) ? "أحذية" : "ملابس";
-
-                const detailUrl = `product-detail.html?name=${encodeURIComponent(name)}&price=${encodeURIComponent(price)}&img=${encodeURIComponent(e.target.src)}&sizes=${encodeURIComponent(sizes)}&color=${encodeURIComponent(color)}&category=${encodeURIComponent(category)}`;
-                link.setAttribute('href', detailUrl);
-            }
-        }
-    };
-
-    document.addEventListener('mouseover', handleThumbInteraction);
-    document.addEventListener('click', handleThumbInteraction);
-
-    // 2. توليد المنتجات ذات الصلة في صفحة التفاصيل
-    const relatedGrid = document.getElementById('related-products-grid');
-    if (relatedGrid) {
-        const relatedData = [
-            { name: "قميص كلاسيك أبيض", price: "450 جنيه", img: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500", size: "M,L,XL", color: "أبيض", category: "ملابس" },
-            { name: "بنطال جينز أزرق", price: "550 جنيه", img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=500", size: "L,XL", color: "أزرق", category: "ملابس" },
-            { name: "حذاء رياضي عصري", price: "890 جنيه", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500", size: "42,43", color: "أحمر", category: "أحذية" },
-            { name: "فستان سهرة أبيض", price: "600 جنيه", img: "https://images.unsplash.com/photo-1539008835757-c68c7d09b3e7?w=500", size: "S,M", color: "أبيض", category: "ملابس" }
-        ];
-
-        relatedData.forEach(prod => {
-            const prodCard = document.createElement('div');
-            prodCard.className = 'product-card';
-            prodCard.dataset.size = prod.size;
-            prodCard.dataset.color = prod.color;
-            prodCard.dataset.category = prod.category;
-            prodCard.innerHTML = `
-                <img src="${prod.img}" alt="${prod.name}" loading="lazy">
-                <h3>${prod.name}</h3>
-                <p class="price">${prod.price}</p>
-                <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
-            `;
-            relatedGrid.appendChild(prodCard);
-        });
-
-        // تطبيق تأثير الظهور للصور الجديدة وتحديث روابطها
-        applyFadeIn(relatedGrid.querySelectorAll('img'));
-    }
-
-    // تشغيل تحديث الروابط
-    // updateProductLinks(); // This will be called by updateMasterFilter
-
-    // 3. استقبال البيانات في صفحة التفاصيل
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('name')) {
-        const nameElem = document.getElementById('main-product-name');
-        const priceElem = document.getElementById('main-product-price');
-        const imgElem = document.getElementById('main-product-img');
-        const categoryElem = document.getElementById('main-product-category');
-        const jsonLdScript = document.querySelector('script[type="application/ld+json"]');
-        const sizesContainer = document.getElementById('product-sizes-container');
-        const colorsContainer = document.getElementById('product-colors-container');
-
-        if (nameElem) nameElem.textContent = urlParams.get('name');
-        if (priceElem) priceElem.textContent = urlParams.get('price');
-
-        if (imgElem) {
-            imgElem.onload = () => imgElem.classList.add('loaded');
-            imgElem.classList.remove('loaded'); // إخفاء الصورة القديمة مؤقتاً
-            imgElem.src = urlParams.get('img');
-        }
-
-        if (categoryElem) {
-            const gender = urlParams.get('gender') || '';
-            const category = urlParams.get('category') || '';
-            categoryElem.textContent = `القسم: ${category} ${gender ? `(${gender})` : ''}`;
-        }
-
-        // Update description based on category
-        const descElem = document.getElementById('main-product-desc');
-        if (descElem) {
-            const category = urlParams.get('category');
-            if (category === "أحذية") {
-                descElem.textContent = `هذا الـ ${urlParams.get('name')} مصمم هندسياً ليوفر أقصى درجات الراحة والدعم للقدمين أثناء المشي والوقوف لفترات طويلة مع نعل مرن عالي الجودة.`;
-            } else if (category === "ملابس") {
-                descElem.textContent = `هذا الـ ${urlParams.get('name')} مصنوع من أجود أنواع الأقمشة الناعمة والأنسجة العالمية لضمان التهوية الجيدة والراحة التامة مع مظهر عصري أنيق.`;
-            } else { // Default description
-                descElem.textContent = `هذا الـ ${urlParams.get('name')} مصنوع من خامات عالية الجودة لضمان الراحة والأناقة الدائمة.`;
-            }
-        }
-
-        // Update JSON-LD for product details dynamically
-        if (jsonLdScript) {
-            const productData = JSON.parse(jsonLdScript.textContent);
-            productData.name = urlParams.get('name');
-            productData.image = [urlParams.get('img')];
-            productData.description = descElem.textContent; // Use the dynamically generated description
-            if (productData.offers) {
-                productData.offers.price = parseFloat(urlParams.get('price').replace(' جنيه', ''));
-                productData.offers.url = window.location.href; // Current URL
-            } else {
-                descElem.textContent = `هذا الـ ${urlParams.get('name')} مصنوع من خامات عالية الجودة لضمان الراحة والأناقة الدائمة.`;
-            }
-        }
-
-        // تعبئة المقاسات المتاحة للمنتج
-        if (sizesContainer && urlParams.has('sizes')) {
-            sizesContainer.innerHTML = '';
-            const sizes = urlParams.get('sizes').split(',');
-            sizes.forEach(s => {
-                if (s.trim()) {
-                    const btn = document.createElement('div');
-                    btn.className = 'size-btn';
-                    btn.textContent = s.trim();
-                    sizesContainer.appendChild(btn);
+                // التعامل مع الفيديوهات
+                if (target.tagName === 'VIDEO') {
+                    target.load(); // يبدأ تحميل الفيديو فقط عند الظهور
                 }
-            });
-        }
 
-        // تعبئة اللون المتاح للمنتج
-        if (colorsContainer && urlParams.has('color')) {
-            colorsContainer.innerHTML = '';
-            const color = urlParams.get('color').trim();
-            if (color) {
-                const btn = document.createElement('div');
-                btn.className = 'size-btn';
-                btn.textContent = color;
-                if (color === 'أسود') { btn.style.background = '#000'; btn.style.color = '#fff'; }
-                if (color === 'أبيض') { btn.style.background = '#fff'; btn.style.border = '1px solid #ddd'; }
-                if (color === 'أزرق') { btn.style.background = '#1a73e8'; btn.style.color = '#fff'; }
-                colorsContainer.appendChild(btn);
-            }
-        }
-    }
-
-    // Setup wishlist button in product detail page
-    const detailWishBtn = document.getElementById('detail-wishlist-btn');
-    if (detailWishBtn) {
-        detailWishBtn.onclick = () => {
-            const name = document.getElementById('main-product-name').textContent;
-            const price = document.getElementById('main-product-price').textContent;
-            const img = document.getElementById('main-product-img').src;
-            toggleWishlist({ name, price, img });
-        };
-    }
-
-    // --- Unified Smart Filter and Display System ---
-    const filters = {
-        search: '',
-        sort: 'default',
-        gender: [],
-        category: [],
-        color: [],
-        size: [],
-        price: 2000,
-        newArrivals: false
-    };
-
-    const productCards = document.querySelectorAll('.product-card'); // All product cards
-    const productsListing = document.getElementById('products-listing');
-
-    const updateMasterFilter = () => {
-        if (!productsListing) return; // لا يعمل إلا في صفحة المنتجات
-
-        const sectionsProducts = { 'mens-section': [], 'womens-section': [] };
-        let totalVisible = 0;
-
-        productCards.forEach(card => {
-            const name = card.querySelector('h3').textContent.toLowerCase();
-            const brand = card.querySelector('.brand-name')?.textContent.toLowerCase() || '';
-            const price = parseFloat(card.dataset.price);
-            const gender = card.dataset.gender;
-            const category = card.dataset.category;
-            const color = card.dataset.color;
-            const sizes = (card.dataset.size || '').split(',');
-            const isNew = card.dataset.new === 'true';
-
-            const matchesSearch = name.includes(filters.search) || brand.includes(filters.search);
-            const matchesPrice = price <= filters.price;
-            const matchesGender = filters.gender.length === 0 || filters.gender.includes(gender);
-            const matchesCategory = filters.category.length === 0 || filters.category.includes(category);
-            const matchesColor = filters.color.length === 0 || filters.color.includes(color);
-            const matchesSize = filters.size.length === 0 || filters.size.some(s => sizes.includes(s));
-            const matchesNew = !filters.newArrivals || isNew;
-
-            const isVisible = matchesSearch && matchesPrice && matchesGender && matchesCategory && matchesColor && matchesSize && matchesNew;
-            card.style.display = isVisible ? 'block' : 'none';
-
-            if (isVisible) {
-                totalVisible++;
-                const sectionId = card.closest('section')?.id;
-                if (sectionId && sectionsProducts[sectionId]) {
-                    sectionsProducts[sectionId].push(card);
-                }
+                target.classList.add('loaded');
+                observer.unobserve(target); // التوقف عن مراقبة العنصر بعد تحميله
             }
         });
+    }, { rootMargin: '50px' }); // التحميل قبل الوصول للعنصر بـ 50 بكسل
 
-        // Sorting Logic
-        for (const id in sectionsProducts) {
-            const list = sectionsProducts[id];
-            if (filters.sort !== 'default') {
-                list.sort((a, b) => {
-                    const pA = parseFloat(a.dataset.price);
-                    const pB = parseFloat(b.dataset.price);
-                    return filters.sort === 'price-asc' ? pA - pB : pB - pA;
-                });
-                const grid = document.querySelector(`#${id} .product-grid`);
-                if (grid) { grid.innerHTML = ''; list.forEach(c => grid.appendChild(c)); }
-            }
-            // Update Counts
-            const section = document.getElementById(id);
-            if (section) {
-                section.style.display = list.length > 0 ? 'block' : 'none';
-            }
-        }
-
-        updateFilterCountsUI(); // Update counts after filtering
-
-        const noRes = document.getElementById('no-results-msg');
-        if (noRes) noRes.style.display = totalVisible === 0 ? 'block' : 'none';
-
-        renderChips();
-        updateProductLinks();
-    };
-
-    const renderChips = () => {
-        const container = document.getElementById('active-chips');
-        if (!container) return;
-        container.innerHTML = '';
-
-        if (filters.newArrivals) {
-            const chip = document.createElement('div');
-            chip.className = 'chip';
-            chip.innerHTML = `وصل حديثاً ✕`;
-            chip.onclick = () => {
-                filters.newArrivals = false;
-                updateMasterFilter();
-            };
-            container.appendChild(chip);
-        }
-
-        ['gender', 'category', 'color', 'size'].forEach(type => {
-            filters[type].forEach(val => {
-                const chip = document.createElement('div');
-                chip.className = 'chip';
-                chip.innerHTML = `${val} ✕`;
-                chip.onclick = () => {
-                    filters[type] = filters[type].filter(v => v !== val);
-                    syncUIWithFilters();
-                    updateMasterFilter();
-                };
-                container.appendChild(chip);
-            });
-        });
-    };
-
-    // Function to update filter counts in the UI
-    const updateFilterCountsUI = () => {
-        const currentVisibleProducts = Array.from(productCards).filter(card => card.style.display !== 'none');
-        const counts = { 'القسم': {}, 'الفئة': {}, 'اللون': {}, 'المقاس': {} };
-
-        currentVisibleProducts.forEach(card => {
-            const gender = card.dataset.gender;
-            if (gender) counts['القسم'][gender] = (counts['القسم'][gender] || 0) + 1;
-
-            const category = card.dataset.category;
-            if (category) counts['الفئة'][category] = (counts['الفئة'][category] || 0) + 1;
-
-            const color = card.dataset.color;
-            if (color) counts['اللون'][color] = (counts['اللون'][color] || 0) + 1;
-
-            const sizes = card.dataset.size ? card.dataset.size.split(',') : [];
-            sizes.forEach(size => {
-                const s = size.trim();
-                if (s) counts['المقاس'][s] = (counts['المقاس'][s] || 0) + 1;
-            });
-        });
-
-        document.querySelectorAll('.filter-group').forEach(group => {
-            const h4 = group.querySelector('h4');
-            if (!h4) return;
-            const groupName = h4.textContent.trim();
-
-            group.querySelectorAll('input[type="checkbox"]').forEach(input => {
-                const value = input.value.trim();
-                const count = counts[groupName][value] || 0;
-                let span = input.closest('label').querySelector('.filter-count');
-                if (!span) { span = document.createElement('span'); span.className = 'filter-count'; input.closest('label').appendChild(span); }
-                span.textContent = ` (${count})`;
-            });
-            group.querySelectorAll('.filter-color, .filter-size').forEach(el => {
-                const value = el.dataset.color || el.dataset.size;
-                const count = counts[groupName][value] || 0;
-                let span = el.querySelector('.filter-count');
-                if (!span) { span = document.createElement('span'); span.className = 'filter-count'; el.appendChild(span); }
-                span.textContent = ` (${count})`;
-            });
-        });
-    };
-
-    const syncUIWithFilters = () => {
-        document.querySelectorAll('.filter-check').forEach(cb => cb.checked = filters[cb.dataset.type].includes(cb.value));
-        document.querySelectorAll('.filter-color').forEach(sw => sw.classList.toggle('active', filters.color.includes(sw.dataset.color)));
-        document.querySelectorAll('.filter-size').forEach(sz => sz.classList.toggle('active', filters.size.includes(sz.dataset.size)));
-        const slider = document.getElementById('price-slider');
-        if (slider) { slider.value = filters.price; document.getElementById('price-limit-val').textContent = `${filters.price} ج.م`; }
-    };
-
-    // Event Listeners for Filters
-    document.querySelectorAll('.filter-check').forEach(cb => cb.addEventListener('change', e => {
-        const val = e.target.value;
-        const type = e.target.dataset.type;
-        filters[type] = e.target.checked ? [...filters[type], val] : filters[type].filter(v => v !== val);
-        updateMasterFilter();
-    }));
-
-    document.querySelectorAll('.filter-color').forEach(sw => sw.addEventListener('click', e => {
-        // Prevent event from bubbling up to parent elements that might have other click handlers
-        e.stopPropagation();
-        const c = sw.dataset.color;
-        const isActive = sw.classList.contains('active');
-        if (isActive) {
-            filters.color = filters.color.filter(v => v !== c);
-        } else {
-            filters.color.push(c);
-        }
-        updateMasterFilter(); // This will call syncUIWithFilters which toggles active class
-    }));
-
-
-    document.querySelectorAll('.filter-size').forEach(sz => sz.addEventListener('click', () => {
-        const s = sz.dataset.size;
-        filters.size = filters.size.includes(s) ? filters.size.filter(v => v !== s) : [...filters.size, s];
-        sz.classList.toggle('active');
-        updateMasterFilter();
-    }));
-
-    const priceSlider = document.getElementById('price-slider');
-    if (priceSlider) priceSlider.addEventListener('input', (e) => {
-        filters.price = parseInt(e.target.value);
-        document.getElementById('price-limit-val').textContent = `${filters.price} ج.م`;
-        updateMasterFilter();
+    const lazyElements = document.querySelectorAll('img[loading="lazy"], .lazy-bg, video[preload="none"]');
+    lazyElements.forEach(el => {
+        lazyObserver.observe(el);
+        // إضافة كلاس loaded للصور المحملة مسبقاً (Cache)
+        if (el.tagName === 'IMG' && el.complete) el.classList.add('loaded');
+        else el.addEventListener('load', () => el.classList.add('loaded'));
     });
 
-    // وظيفة Debounce لمنع تكرار التنفيذ الثقيل مع كل نقرة زر أو حرف
-    function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
+    // --- 5. التحكم في معرض صور المنتج (Product Gallery) ---
+    // هذا القسم يتعامل مع تفاعل الصور المصغرة لكروت المنتجات في صفحات الشبكة (index.html, products.html)
+    const productCards = document.querySelectorAll('.product-card');
+    productCards.forEach(card => {
+        const cardThumbs = card.querySelectorAll('.thumb-item');
+        const cardMainImg = card.querySelector('.main-card-img');
+        const gallery = card.querySelector('.product-image-gallery');
+
+        // تحديث حالة زر المفضلة لكروت المنتجات
+        const wishlistBtn = card.querySelector('.wishlist-btn');
+        const productDataForCard = {
+            id: card.dataset.productId || card.querySelector('h3').textContent, // استخدام ID إذا كان موجودًا، وإلا الاسم
+            name: card.querySelector('h3').textContent,
+            price: card.querySelector('.price').textContent,
+            image: cardMainImg ? cardMainImg.src : '',
         };
-    }
-
-    const searchInp = document.getElementById('search-input');
-    if (searchInp) searchInp.addEventListener('input', debounce((e) => { filters.search = e.target.value.toLowerCase(); updateMasterFilter(); }, 300));
-
-    const sortSel = document.getElementById('sort-select');
-    if (sortSel) sortSel.addEventListener('change', (e) => { filters.sort = e.target.value; updateMasterFilter(); });
-
-    // Handle URL Parameters (Smart Navigation from Home and initial filter application)
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('category') && !filters.category.includes(params.get('category'))) filters.category.push(params.get('category'));
-    if (params.has('gender') && !filters.gender.includes(params.get('gender'))) filters.gender.push(params.get('gender'));
-    if (params.has('filter') && params.get('filter') === 'new') filters.newArrivals = true;
-
-    // Initial sync and filter application
-    syncUIWithFilters();
-    updateMasterFilter();
-
-    // --- Dark Mode System ---
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
-    if (darkModeToggle) {
-        if (localStorage.getItem('dark-mode') === 'enabled') {
-            document.body.classList.add('dark-mode');
-            darkModeToggle.textContent = '☀️'; // Set initial icon
+        if (wishlistBtn) {
+            updateWishlistButtonState(wishlistBtn, productDataForCard.id);
         }
-        darkModeToggle.addEventListener('click', () => {
-            const isDark = document.body.classList.toggle('dark-mode');
-            localStorage.setItem('dark-mode', isDark ? 'enabled' : 'disabled');
-            darkModeToggle.textContent = isDark ? '☀️' : '🌙';
+
+        // تفعيل السلايدر المصغر عند تمرير الفأرة (Hover Slider)
+        if (cardMainImg && cardThumbs.length > 1 && gallery) {
+            // إنشاء نقاط التنقل برمجياً بناءً على عدد الصور
+            const pagination = document.createElement('div');
+            pagination.className = 'image-pagination';
+            
+            const images = Array.from(cardThumbs).map(t => t.src);
+            const dots = [];
+
+            images.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'pagination-dot' + (i === 0 ? ' active' : '');
+                pagination.appendChild(dot);
+                dots.push(dot);
+            });
+            gallery.appendChild(pagination);
+
+            // منطق حساب تقسيم الصورة وتغييرها
+            gallery.addEventListener('mousemove', (e) => {
+                // تجاهل الحركة إذا كانت فوق شريط الصور المصغرة السفلي
+                if (e.target.closest('.thumb-bar')) return;
+
+                const rect = gallery.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const index = Math.floor((x / rect.width) * images.length);
+                const safeIndex = Math.max(0, Math.min(index, images.length - 1));
+
+                cardMainImg.src = images[safeIndex];
+                
+                // تحديث النقطة النشطة
+                dots.forEach((d, i) => d.classList.toggle('active', i === safeIndex));
+            });
+
+            // إعادة الصورة للأصل عند خروج الفأرة
+            gallery.addEventListener('mouseleave', () => {
+                cardMainImg.src = images[0];
+                dots.forEach((d, i) => d.classList.toggle('active', i === 0));
+            });
+        }
+
+        // تفعيل أزرار الإضافة السريعة للسلة
+        const quickAddButtons = card.querySelectorAll('.quick-add-btn');
+        quickAddButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // منع الانتقال لصفحة التفاصيل عند النقر على الزر
+                const product = {
+                    id: card.dataset.productId || card.querySelector('h3').textContent,
+                    name: card.querySelector('h3').textContent,
+                    price: parseInt(card.querySelector('.price').textContent.replace(/[^0-9]/g, '')),
+                    image: cardMainImg ? cardMainImg.src : '',
+                    quantity: 1
+                };
+                
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const existing = cart.findIndex(item => item.id === product.id);
+                if (existing > -1) cart[existing].quantity += 1;
+                else cart.push(product);
+                
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCountDisplay();
+                alert('تمت إضافة المنتج للسلة بنجاح!');
+            });
+        });
+    });
+
+    // --- 6. تأثير الزووم في صفحة التفاصيل ---
+    const detailImg = document.getElementById('main-product-img');
+    if (detailImg) {
+        detailImg.addEventListener('click', () => {
+            detailImg.classList.toggle('zoomed');
         });
     }
 
-    // --- Contact Form Handling ---
+    // --- 7. نموذج التواصل ---
     const contactForm = document.getElementById('contact-form');
-    const formFeedback = document.getElementById('form-feedback');
-
-    if (contactForm && formFeedback) {
+    if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            // هنا يمكن إضافة كود لإرسال البيانات للخادم
-            contactForm.style.display = 'none';
-            formFeedback.style.display = 'block';
-            console.log("Contact Form Submitted");
+            document.getElementById('form-feedback').style.display = 'block';
+            contactForm.reset();
         });
     }
 
-    updateWishlistUI();
+    // --- 15. تأثير النبض عند التمرير (Scroll Pulse Effect) ---
+    if (productCards.length > 0) {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.2
+        };
+        const productCardObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        productCards.forEach(card => {
+            productCardObserver.observe(card);
+        });
+    }
+
+    // --- 10. منطق صفحة تفاصيل المنتج (Dynamic Product Details) ---
+    const productLinks = document.querySelectorAll('.product-card .btn-small');
+    productLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            const card = e.target.closest('.product-card');
+            if (!card) return;
+            const mainImageSrc = card.querySelector('.main-card-img').src;
+            const thumbImages = Array.from(card.querySelectorAll('.thumb-item')).map(img => img.src);
+            const uniqueThumbImages = thumbImages.filter(src => src !== mainImageSrc);
+            const allImages = [mainImageSrc, ...uniqueThumbImages];
+            const productData = {
+                id: card.dataset.productId || card.querySelector('h3').textContent,
+                name: card.querySelector('h3').textContent,
+                price: card.querySelector('.price').textContent,
+                images: allImages,
+                category: card.dataset.gender ? `القسم: ${card.dataset.gender} - ${card.dataset.category || ''}` : 'القسم: ملابس',
+                sizes: card.dataset.size ? card.dataset.size.split(',') : ['M', 'L', 'XL'],
+                colors: card.dataset.color ? card.dataset.color.split(',') : ['أسود'],
+                desc: "خامة عالية الجودة مريحة جداً للاستخدام اليومي، تصميم عصري يناسب جميع الأذواق."
+            };
+            localStorage.setItem('selectedProduct', JSON.stringify(productData));
+        });
+    });
+
+    if (window.location.pathname.includes('product-detail.html')) {
+        const product = JSON.parse(localStorage.getItem('selectedProduct'));
+        if (product) {
+            const nameEl = document.getElementById('main-product-name');
+            const priceEl = document.getElementById('main-product-price');
+            const mainProductImgEl = document.getElementById('main-product-img');
+            const descEl = document.getElementById('main-product-desc');
+            const categoryEl = document.getElementById('main-product-category');
+            const sizesContainer = document.getElementById('product-sizes-container');
+            const colorsContainer = document.getElementById('product-colors-container');
+            const detailWishlistBtn = document.getElementById('detail-wishlist-btn');
+            const productDetailThumbBar = document.querySelector('.product-detail-thumb-bar');
+            if (nameEl) nameEl.textContent = product.name;
+            if (priceEl) priceEl.textContent = product.price;
+            if (descEl) descEl.textContent = product.desc;
+            if (categoryEl) categoryEl.textContent = product.category;
+            if (detailWishlistBtn) {
+                updateWishlistButtonState(detailWishlistBtn, product.id);
+            }
+            if (mainProductImgEl && product.images && product.images.length > 0) {
+                mainProductImgEl.src = product.images[0];
+                if (productDetailThumbBar) {
+                    productDetailThumbBar.innerHTML = product.images.map((imgSrc, index) => 
+                        `<img src="${imgSrc}" class="thumb-item ${index === 0 ? 'active' : ''}" alt="Product thumbnail ${index + 1}">`
+                    ).join('');
+                    const detailThumbs = productDetailThumbBar.querySelectorAll('.thumb-item');
+                    detailThumbs.forEach(thumb => {
+                        thumb.addEventListener('click', function() {
+                            mainProductImgEl.src = this.src;
+                            detailThumbs.forEach(t => t.classList.remove('active'));
+                            this.classList.add('active');
+                        });
+                    });
+                }
+            }
+            if (sizesContainer) {
+                sizesContainer.innerHTML = product.sizes.map(size => `<div class="size-chip">${size}</div>`).join('');
+            }
+            if (colorsContainer) {
+                colorsContainer.innerHTML = product.colors.map(color => `<div class="size-chip">${color}</div>`).join('');
+            }
+            const chips = document.querySelectorAll('.size-chip');
+            chips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    const siblings = this.parentElement.querySelectorAll('.size-chip');
+                    siblings.forEach(s => s.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+    }
+
+    // --- 8. إدارة سلة المشتريات (Cart Management) ---
+    const addToCartBtn = document.getElementById('add-to-cart-btn');
+    if (addToCartBtn && window.location.pathname.includes('product-detail.html')) {
+        addToCartBtn.addEventListener('click', () => {
+            const nameEl = document.getElementById('main-product-name');
+            const priceEl = document.getElementById('main-product-price');
+            const currentMainImgEl = document.getElementById('main-product-img');
+            const selectedProductData = JSON.parse(localStorage.getItem('selectedProduct'));
+            const product = {
+                id: selectedProductData ? selectedProductData.id : Date.now(),
+                name: nameEl ? nameEl.textContent : 'منتج بدون اسم',
+                price: priceEl ? parseInt(priceEl.textContent.replace(/[^0-9]/g, '')) : 0,
+                image: currentMainImgEl ? currentMainImgEl.src : '',
+                quantity: 1
+            };
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingProductIndex = cart.findIndex(item => item.id === product.id);
+            if (existingProductIndex > -1) {
+                cart[existingProductIndex].quantity += 1;
+            } else {
+                cart.push(product);
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCountDisplay();
+            alert('تم إضافة المنتج إلى السلة بنجاح!');
+            window.location.href = 'cart.html';
+        });
+    }
+
+    const cartTableBody = document.getElementById('cart-items-body');
+    if (cartTableBody) {
+        renderCart();
+    }
+
+    function renderCart() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const totalAmountEl = document.getElementById('cart-total-amount');
+        if (cart.length === 0) {
+            cartTableBody.innerHTML = '<tr><td colspan="4" style="padding: 20px; text-align: center;">السلة فارغة حالياً</td></tr>';
+            if (totalAmountEl) totalAmountEl.textContent = '0';
+            return;
+        }
+        let html = '';
+        let total = 0;
+        cart.forEach((item, index) => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            html += `
+                <tr>
+                    <td class="product-cell">
+                        <img src="${item.image}" alt="${item.name}">
+                        <span>${item.name}</span>
+                    </td>
+                    <td class="cart-quantity-cell">
+                        <div class="cart-quantity-controls">
+                            <button onclick="updateQuantity(${index}, -1)" class="cart-quantity-btn">-</button>
+                            <span style="min-width: 20px; text-align: center;">${item.quantity}</span>
+                            <button onclick="updateQuantity(${index}, 1)" class="cart-quantity-btn">+</button>
+                        </div>
+                    </td>
+                    <td>${itemTotal} جنيه</td>
+                    <td>
+                        <button onclick="removeFromCart(${index})" class="cart-remove-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`;
+        });
+        cartTableBody.innerHTML = html;
+        if (totalAmountEl) totalAmountEl.textContent = total;
+    }
+
+    window.removeFromCart = (index) => {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCountDisplay();
+        renderCart();
+    };
+
+    window.updateQuantity = (index, delta) => {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (cart[index]) {
+            cart[index].quantity += delta;
+            if (cart[index].quantity < 1) cart[index].quantity = 1;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCountDisplay();
+            renderCart();
+        }
+    };
+
+    window.toggleWishlist = (productData) => {
+        let wishlist = getWishlist();
+        const existingProductIndex = wishlist.findIndex(item => item.id === productData.id);
+        let added;
+        if (existingProductIndex > -1) {
+            wishlist.splice(existingProductIndex, 1);
+            added = false;
+            alert('تمت إزالة المنتج من قائمة الأمنيات.');
+        } else {
+            wishlist.push(productData);
+            added = true;
+            alert('تمت إضافة المنتج إلى قائمة الأمنيات.');
+        }
+        saveWishlist(wishlist);
+        updateWishlistCountDisplay();
+        return added;
+    };
+
+    const wishlistButtons = document.querySelectorAll('.product-card .wishlist-btn');
+    wishlistButtons.forEach(btn => {
+        const card = btn.closest('.product-card');
+        const productData = {
+            id: card.dataset.productId || card.querySelector('h3').textContent,
+            name: card.querySelector('h3').textContent,
+            price: card.querySelector('.price').textContent,
+            image: card.querySelector('.main-card-img').src,
+        };
+        updateWishlistButtonState(btn, productData.id);
+        btn.addEventListener('click', () => {
+            const added = window.toggleWishlist(productData);
+            btn.classList.toggle('active', added);
+        });
+    });
+
+    const detailWishlistBtn = document.getElementById('detail-wishlist-btn');
+    if (detailWishlistBtn && window.location.pathname.includes('product-detail.html')) {
+        detailWishlistBtn.addEventListener('click', () => {
+            const product = JSON.parse(localStorage.getItem('selectedProduct'));
+            if (product) {
+                const added = window.toggleWishlist(product);
+                detailWishlistBtn.classList.toggle('active', added);
+            }
+        });
+    }
+
+    const wishlistGrid = document.getElementById('wishlist-items-grid');
+    if (wishlistGrid && window.location.pathname.includes('wishlist.html')) {
+        const wishlist = getWishlist();
+        if (wishlist.length === 0) {
+            wishlistGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; padding: 20px;">قائمة الأمنيات فارغة حالياً.</p>';
+        } else {
+            wishlistGrid.innerHTML = wishlist.map(item => `
+                <div class="product-card">
+                    <button class="wishlist-btn active" onclick="window.toggleWishlist({id: '${item.id}', name: '${item.name}', price: '${item.price}', image: '${item.image}'}); this.closest('.product-card').remove();">❤</button>
+                    <img src="${item.image}" class="main-card-img" alt="${item.name}">
+                    <h3>${item.name}</h3>
+                    <p class="price">${item.price}</p>
+                    <a href="product-detail.html" class="btn-small" onclick="localStorage.setItem('selectedProduct', JSON.stringify({id: '${item.id}', name: '${item.name}', price: '${item.price}', images: ['${item.image}'], category: '', sizes: [], colors: [], desc: ''}))">عرض التفاصيل</a>
+                </div>`).join('');
+        }
+    }
+
+    // --- 12. فلترة المنتجات في صفحة products.html ---
+    const productsPage = document.getElementById('products-listing');
+    if (productsPage) {
+        const productGrid = productsPage.querySelector('.product-grid');
+        const allProductCards = Array.from(productsPage.querySelectorAll('.product-card'));
+        let productsData = [];
+        allProductCards.forEach(card => {
+            const mainImageSrc = card.querySelector('.main-card-img') ? card.querySelector('.main-card-img').src : '';
+            const thumbImages = Array.from(card.querySelectorAll('.thumb-item')).map(img => img.src);
+            const uniqueThumbImages = thumbImages.filter(src => src !== mainImageSrc);
+            const allImages = [mainImageSrc, ...uniqueThumbImages];
+            productsData.push({
+                element: card,
+                id: card.dataset.productId || card.querySelector('h3').textContent,
+                name: card.querySelector('h3').textContent,
+                price: parseInt(card.dataset.price),
+                gender: card.dataset.gender,
+                category: card.dataset.category,
+                sizes: card.dataset.size ? card.dataset.size.split(',') : [],
+                colors: card.dataset.color ? card.dataset.color.split(',') : [],
+                images: allImages,
+                isNew: card.dataset.new === 'true'
+            });
+        });
+
+        const filterCheckboxes = document.querySelectorAll('.filter-check');
+        const filterSizeBoxes = document.querySelectorAll('.filter-size');
+        const filterColorSwatches = document.querySelectorAll('.filter-color');
+        const priceSlider = document.getElementById('price-slider');
+        const priceLimitVal = document.getElementById('price-limit-val');
+        const applyFiltersBtn = document.getElementById('apply-filters-btn');
+        const activeChipsContainer = document.getElementById('active-chips');
+
+        if (priceSlider && priceLimitVal) {
+            priceLimitVal.textContent = `${priceSlider.value} جنيه`;
+            priceSlider.addEventListener('input', () => {
+                priceLimitVal.textContent = `${priceSlider.value} جنيه`;
+            });
+        }
+
+        const applyFilters = () => {
+            const activeFilters = {
+                gender: [],
+                category: [],
+                size: [],
+                color: [],
+                price: parseInt(priceSlider ? priceSlider.value : 2000)
+            };
+            filterCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) activeFilters[checkbox.dataset.type].push(checkbox.value);
+            });
+            filterSizeBoxes.forEach(box => {
+                if (box.classList.contains('active')) activeFilters.size.push(box.dataset.size);
+            });
+            filterColorSwatches.forEach(swatch => {
+                if (swatch.classList.contains('active')) activeFilters.color.push(swatch.dataset.color);
+            });
+            const filteredProducts = productsData.filter(product => {
+                const matchesGender = activeFilters.gender.length === 0 || activeFilters.gender.includes(product.gender);
+                const matchesCategory = activeFilters.category.length === 0 || activeFilters.category.includes(product.category);
+                const matchesSize = activeFilters.size.length === 0 || product.sizes.some(size => activeFilters.size.includes(size));
+                const matchesColor = activeFilters.color.length === 0 || product.colors.some(color => activeFilters.color.includes(color));
+                const matchesPrice = product.price <= activeFilters.price;
+                return matchesGender && matchesCategory && matchesSize && matchesColor && matchesPrice;
+            });
+            productGrid.innerHTML = '';
+            if (filteredProducts.length === 0) {
+                productGrid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; padding: 20px;">لا توجد منتجات مطابقة للفلاتر المختارة.</p>';
+            } else {
+                filteredProducts.forEach(product => productGrid.appendChild(product.element));
+            }
+            updateActiveChipsDisplay(activeFilters);
+        };
+
+        const updateActiveChipsDisplay = (filters) => {
+            activeChipsContainer.innerHTML = '';
+            const chips = [];
+            Object.keys(filters).forEach(key => {
+                if (key === 'price') {
+                    if (filters.price < parseInt(priceSlider.max)) {
+                        chips.push({ type: 'price', value: `${filters.price} جنيه`, display: `السعر: حتى ${filters.price} جنيه` });
+                    }
+                } else {
+                    filters[key].forEach(value => {
+                        chips.push({ type: key, value: value, display: `${key === 'gender' ? 'النوع' : key === 'category' ? 'الفئة' : key === 'size' ? 'المقاس' : 'اللون'}: ${value}` });
+                    });
+                }
+            });
+            chips.forEach(chipData => {
+                const chip = document.createElement('div');
+                chip.classList.add('chip');
+                chip.innerHTML = `${chipData.display} <i class="fas fa-times-circle"></i>`;
+                chip.addEventListener('click', () => {
+                    if (chipData.type === 'price') {
+                        priceSlider.value = priceSlider.max;
+                        priceLimitVal.textContent = `${priceSlider.max} جنيه`;
+                    } else if (chipData.type === 'gender' || chipData.type === 'category') {
+                        document.querySelector(`.filter-check[data-type="${chipData.type}"][value="${chipData.value}"]`).checked = false;
+                    } else if (chipData.type === 'size') {
+                        document.querySelector(`.filter-size[data-size="${chipData.value}"]`).classList.remove('active');
+                    } else if (chipData.type === 'color') {
+                        document.querySelector(`.filter-color[data-color="${chipData.value}"]`).classList.remove('active');
+                    }
+                    applyFilters();
+                });
+                activeChipsContainer.appendChild(chip);
+            });
+        };
+        filterCheckboxes.forEach(checkbox => checkbox.addEventListener('change', applyFilters));
+        filterSizeBoxes.forEach(box => box.addEventListener('click', () => {
+            box.classList.toggle('active');
+            applyFilters();
+        }));
+        filterColorSwatches.forEach(swatch => swatch.addEventListener('click', () => {
+            swatch.classList.toggle('active');
+            applyFilters();
+        }));
+        if (priceSlider) priceSlider.addEventListener('change', applyFilters);
+        if (applyFiltersBtn) applyFiltersBtn.addEventListener('click', applyFilters);
+        applyFilters();
+    }
+
+    // --- 13. زر العودة للأعلى (Scroll to Top Button) ---
+    const scrollTopBtn = document.getElementById('scroll-to-top-btn');
+    if (scrollTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) scrollTopBtn.classList.add('show');
+            else scrollTopBtn.classList.remove('show');
+        });
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // --- 14. إتمام الطلب عبر واتساب (Checkout to WhatsApp) ---
+    const checkoutForm = document.getElementById('checkout-form');
+    if (checkoutForm) {
+        const shippingRates = { 'cairo': 30, 'giza': 35, 'alex': 50, 'others': 70 };
+        const govSelect = document.getElementById('customer-governorate');
+        const subtotalEl = document.getElementById('subtotal-amount');
+        const shippingEl = document.getElementById('shipping-amount');
+        const finalTotalEl = document.getElementById('final-total-amount');
+        const updateSummary = () => {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = govSelect ? (shippingRates[govSelect.value] || 0) : 0;
+            if(subtotalEl) subtotalEl.textContent = subtotal;
+            if(shippingEl) shippingEl.textContent = shipping;
+            if(finalTotalEl) finalTotalEl.textContent = subtotal + shipping;
+        };
+        if (govSelect) {
+            updateSummary();
+            govSelect.addEventListener('change', updateSummary);
+        }
+        checkoutForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('customer-name').value;
+            const phone = document.getElementById('customer-phone').value;
+            const address = document.getElementById('customer-address').value;
+            const governorate = govSelect ? govSelect.options[govSelect.selectedIndex].text : '';
+            const shippingCost = govSelect ? (shippingRates[govSelect.value] || 0) : 0;
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart.length === 0) {
+                alert('سلة المشتريات فارغة!');
+                return;
+            }
+            let message = `*طلب جديد من متجر مودة (MODA Store)*\n\n*البيانات الشخصية:*\n👤 الاسم: ${name}\n📞 الهاتف: ${phone}\n📍 المحافظة: ${governorate}\n🏠 العنوان: ${address}\n\n*المنتجات المطلوبة:*\n`;
+            let subtotal = 0;
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                message += `${index + 1}. ${item.name} (الكمية: ${item.quantity} × ${item.price} ج) = ${itemTotal} ج\n`;
+            });
+            message += `\n💵 المجموع: ${subtotal} ج\n📦 الشحن: ${shippingCost} ج\n*💰 الإجمالي: ${subtotal + shippingCost} ج*`;
+            const shopWhatsApp = '201234567890';
+            window.open(`https://wa.me/${shopWhatsApp}?text=${encodeURIComponent(message)}`, '_blank');
+            localStorage.removeItem('cart');
+            alert('تم التوجيه إلى واتساب!');
+            window.location.href = 'index.html';
+        });
+    }
 });

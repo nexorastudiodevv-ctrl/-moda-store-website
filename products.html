@@ -47,55 +47,59 @@
           },
           {
             "@type": "ListItem",
-            "position": 2,
+            "position": 6,
             "url": "https://yourdomain.com/product-detail.html",
             "name": "قميص كاجوال أزرق"
           },
           {
             "@type": "ListItem",
-            "position": 3,
+            "position": 7,
             "url": "https://yourdomain.com/product-detail.html",
             "name": "بنطال جينز أسود"
           },
           {
             "@type": "ListItem",
-            "position": 4,
+            "position": 8,
             "url": "https://yourdomain.com/product-detail.html",
             "name": "فستان سهرة أبيض"
           },
           {
             "@type": "ListItem",
-            "position": 5,
+            "position": 9,
             "url": "https://yourdomain.com/product-detail.html",
             "name": "طقم كاجوال حريمي أزرق"
           },
           {
             "@type": "ListItem",
-            "position": 6,
+            "position": 10,
             "url": "https://yourdomain.com/product-detail.html",
             "name": "حذاء رياضي رجالي أبيض"
           },
           {
             "@type": "ListItem",
-            "position": 7,
+            "position": 11,
             "url": "https://yourdomain.com/product-detail.html",
             "name": "سنيكرز رجالي أبيض"
           },
           {
             "@type": "ListItem",
-            "position": 8,
+            "position": 12,
             "url": "https://yourdomain.com/product-detail.html",
             "name": "حذاء كعب عالٍ حريمي أبيض"
           },
           {
             "@type": "ListItem",
-            "position": 9,
+            "position": 13, 
             "url": "https://yourdomain.com/product-detail.html",
             "name": "صندل حريمي صيفي أزرق"
           }
         ]
       }
     </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://images.unsplash.com" />
+
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
@@ -119,7 +123,10 @@
           <a href="products.html">المنتجات</a>
         </nav>
         <div class="header-actions">
-          <a href="cart.html" class="cart-btn">🛒</a>
+          <a href="wishlist.html" class="icon-btn">❤ <span id="wishlist-count">0</span></a>
+          <a href="cart.html" class="icon-btn cart-icon-btn">
+            🛒 <span id="cart-count">0</span>
+          </a>
         </div>
       </div>
     </header>
@@ -132,57 +139,97 @@
       <a href="products.html">👕 المنتجات</a>
       <a href="products.html?filter=new">✨ وصل حديثاً</a>
       <a href="#">🔥 التخفيضات</a>
+      <a href="wishlist.html">❤ قائمة الأمنيات</a>
       <a href="#">📞 تواصل معنا</a>
     </div>
 
     <main class="container shop-container" id="products-listing">
       <aside class="filters">
         <div class="filter-group">
-          ت
           <h4>النوع</h4>
-          <label><input type="checkbox" /> رجالي</label>
-          <label><input type="checkbox" /> حريمي</label>
+          <label
+            ><input
+              type="checkbox"
+              class="filter-check"
+              data-type="gender"
+              value="رجالي"
+            />
+            رجالي</label
+          >
+          <label
+            ><input
+              type="checkbox"
+              class="filter-check"
+              data-type="gender"
+              value="حريمي"
+            />
+            حريمي</label
+          >
+        </div>
+        <div class="filter-group">
+          <h4>الفئة</h4>
+          <label
+            ><input
+              type="checkbox"
+              class="filter-check"
+              data-type="category"
+              value="ملابس"
+            />
+            ملابس</label
+          >
+          <label
+            ><input
+              type="checkbox"
+              class="filter-check"
+              data-type="category"
+              value="أحذية"
+            />
+            أحذية</label
+          >
         </div>
         <div class="filter-group">
           <h4>المقاس</h4>
-          <label><input type="checkbox" /> S</label>
-          <label><input type="checkbox" /> M</label>
-          <label><input type="checkbox" /> L</label>
-          <label><input type="checkbox" /> XL</label>
+          <div class="size-options">
+            <div class="filter-size size-box" data-size="S">S</div>
+            <div class="filter-size size-box" data-size="M">M</div>
+            <div class="filter-size size-box" data-size="L">L</div>
+            <div class="filter-size size-box" data-size="XL">XL</div>
+          </div>
         </div>
         <div class="filter-group">
           <h4>اللون</h4>
-          <label><input type="checkbox" /> أسود</label>
-          <label><input type="checkbox" /> أبيض</label>
-          <label><input type="checkbox" /> أزرق</label>
+          <div class="color-options">
+            <div
+              class="filter-color color-swatch"
+              data-color="أسود"
+              style="background-color: black"
+            ></div>
+            <div
+              class="filter-color color-swatch"
+              data-color="أبيض"
+              style="background-color: white; border: 1px solid #ddd"
+            ></div>
+            <div
+              class="filter-color color-swatch"
+              data-color="أزرق"
+              style="background-color: #1a73e8"
+            ></div>
+          </div>
         </div>
         <div class="filter-group">
           <h4>السعر</h4>
-          <input
-            type="range"
-            id="price-range"
-            min="100"
-            max="2000"
-            value="2000"
-            style="width: 100%"
-          />
-          <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              font-size: 12px;
-            "
-          >
+          <input type="range" id="price-slider" min="100" max="2000" value="2000" style="width: 100%">
+          <div style="display: flex; justify-content: space-between; font-size: 12px;">
             <span>100 ج.م</span>
-            <span id="price-value">2000 ج.م</span>
+            <span id="price-limit-val">2000 ج.م</span>
           </div>
         </div>
-        <button class="btn" style="width: 100%; font-size: 14px; padding: 10px">
+        <button id="apply-filters-btn" class="btn" style="width: 100%; font-size: 14px; padding: 10px">
           تطبيق الفلاتر
         </button>
       </aside>
 
-      <section>
+      <section id="all-products-section">
         <h2 class="section-title">جميع المنتجات</h2>
         <div id="active-chips" class="active-filters"></div>
         <div class="product-grid">
@@ -192,7 +239,10 @@
             data-size="S,M"
             data-color="أبيض"
             data-price="350"
+            data-gender="رجالي"
+            data-category="ملابس"
             data-new="true"
+            data-product-id="mens-tshirt-white-001"
           >
             <div class="product-image-gallery">
               <img
@@ -223,11 +273,15 @@
                   loading="lazy"
                 />
               </div>
+              <div class="product-card-actions">
+                <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+                <a href="product-detail.html" class="btn-small"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+              </div>
             </div>
             <p class="brand-name">LEVI'S</p>
             <h3>تيشيرت قطني رجالي أبيض</h3>
+            <button class="wishlist-btn">❤</button>
             <p class="price">350 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -236,6 +290,7 @@
             data-price="450"
             data-gender="رجالي"
             data-category="ملابس"
+            data-product-id="mens-shirt-blue-002"
           >
             <div class="product-image-gallery">
               <img
@@ -266,11 +321,15 @@
                   loading="lazy"
                 />
               </div>
+              <div class="product-card-actions">
+                <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+                <a href="product-detail.html" class="btn-small"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+              </div>
             </div>
             <p class="brand-name">H&M</p>
             <h3>قميص كاجوال أزرق</h3>
+            <button class="wishlist-btn">❤</button>
             <p class="price">450 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -279,6 +338,7 @@
             data-price="550"
             data-gender="رجالي"
             data-category="ملابس"
+            data-product-id="mens-jeans-black-003"
           >
             <div class="product-image-gallery">
               <img
@@ -309,11 +369,15 @@
                   loading="lazy"
                 />
               </div>
+              <div class="product-card-actions">
+                <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+                <a href="product-detail.html" class="btn-small"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+              </div>
             </div>
             <p class="brand-name">ZARA</p>
             <h3>بنطال جينز أسود</h3>
+            <button class="wishlist-btn">❤</button>
             <p class="price">550 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -322,6 +386,7 @@
             data-price="300"
             data-gender="رجالي"
             data-category="ملابس"
+            data-product-id="mens-tshirt-white-004"
           >
             <div class="product-image-gallery">
               <img
@@ -352,11 +417,15 @@
                   loading="lazy"
                 />
               </div>
+              <div class="product-card-actions">
+                <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+                <a href="product-detail.html" class="btn-small"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+              </div>
             </div>
             <p class="brand-name">MODA EXCLUSIVE</p>
             <h3>تيشيرت صيفي أبيض</h3>
+            <button class="wishlist-btn">❤</button>
             <p class="price">300 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -365,15 +434,20 @@
             data-price="700"
             data-gender="رجالي"
             data-category="ملابس"
+            data-product-id="mens-jacket-denim-005"
           >
             <img
               src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500"
+              class="main-card-img"
               alt="جاكيت"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>جاكيت جينز رجالي</h3>
             <p class="price">700 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -382,15 +456,20 @@
             data-price="1200"
             data-gender="رجالي"
             data-category="ملابس"
+            data-product-id="mens-suit-classic-006"
           >
             <img
               src="https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=500"
+              class="main-card-img"
               alt="بدلة"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>بدلة رسمية كلاسيك</h3>
             <p class="price">1200 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -399,15 +478,20 @@
             data-price="250"
             data-gender="رجالي"
             data-category="ملابس"
+            data-product-id="mens-tshirt-printed-007"
           >
             <img
-              src="https://images.unsplash.com/photo-1503341452305-1fe1284d0c28?w=500"
+              src="https://images.unsplash.com/photo-1576566582418-9ca49bf203c3?w=500"
+              class="main-card-img"
               alt="تيشيرت"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>تيشيرت مطبوع مودرن</h3>
             <p class="price">250 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -416,15 +500,20 @@
             data-price="400"
             data-gender="رجالي"
             data-category="ملابس"
+            data-product-id="mens-polo-blue-008"
           >
             <img
               src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=500"
+              class="main-card-img"
               alt="تيشيرت"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>تيشيرت بولو أزرق</h3>
             <p class="price">400 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -433,15 +522,20 @@
             data-price="500"
             data-gender="رجالي"
             data-category="ملابس"
+            data-product-id="mens-hoodie-black-009"
           >
             <img
               src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=500"
+              class="main-card-img"
               alt="هودي"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>هودي أسود ثقيل</h3>
             <p class="price">500 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -450,15 +544,20 @@
             data-price="380"
             data-gender="رجالي"
             data-category="ملابس"
+            data-product-id="mens-shirt-plaid-010"
           >
             <img
               src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500"
+              class="main-card-img"
               alt="قميص"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>قميص كاروهات أبيض</h3>
             <p class="price">380 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -467,15 +566,20 @@
             data-price="420"
             data-gender="رجالي"
             data-category="ملابس"
+            data-product-id="mens-shirt-levis-011"
           >
             <img
               src="https://images.unsplash.com/photo-1506634064465-7daa4de2753b?w=500"
+              class="main-card-img"
               alt="قميص"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>قميص ليفايس أزرق</h3>
             <p class="price">420 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -484,15 +588,20 @@
             data-price="1500"
             data-gender="رجالي"
             data-category="ملابس"
+            data-product-id="mens-coat-wool-012"
           >
             <img
               src="https://images.unsplash.com/photo-1555069514-12747528df8b?w=500"
+              class="main-card-img"
               alt="بالطو"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>بالطو صوف فخم</h3>
             <p class="price">1500 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
 
           <!-- ملابس حرايمي (13-25) -->
@@ -501,16 +610,23 @@
             data-size="S,M"
             data-color="أبيض"
             data-price="600"
+            data-gender="حريمي"
+            data-category="ملابس"
             data-new="true"
+            data-product-id="womens-dress-white-013"
           >
             <img
               src="https://images.unsplash.com/photo-1539008835757-c68c7d09b3e7?w=500"
+              class="main-card-img"
               alt="فستان"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>فستان سهرة أبيض</h3>
             <p class="price">600 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -519,15 +635,20 @@
             data-price="400"
             data-gender="حريمي"
             data-category="ملابس"
+            data-product-id="womens-set-blue-014"
           >
             <img
               src="https://images.unsplash.com/photo-1509631179644-0f81d7a59d28?w=500"
+              class="main-card-img"
               alt="طقم حريمي كاجوال أزرق"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>طقم كاجوال حريمي أزرق</h3>
             <p class="price">400 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -536,15 +657,20 @@
             data-price="350"
             data-gender="حريمي"
             data-category="ملابس"
+            data-product-id="womens-blouse-black-015"
           >
             <img
               src="https://images.unsplash.com/photo-1554412933-514a83d2f3c8?w=500"
+              class="main-card-img"
               alt="بلوزة"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>بلوزة شيفون سوداء</h3>
             <p class="price">350 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -553,15 +679,20 @@
             data-price="450"
             data-gender="حريمي"
             data-category="ملابس"
+            data-product-id="womens-dress-printed-016"
           >
             <img
               src="https://images.unsplash.com/photo-1572804013307-f9615c127266?w=500"
+              class="main-card-img"
               alt="فستان"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>فستان منقوش ناعم</h3>
             <p class="price">450 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -570,15 +701,20 @@
             data-price="320"
             data-gender="حريمي"
             data-category="ملابس"
+            data-product-id="womens-skirt-denim-017"
           >
             <img
               src="https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?w=500"
+              class="main-card-img"
               alt="تنورة"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>تنورة جينز زرقاء</h3>
             <p class="price">320 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -587,15 +723,20 @@
             data-price="550"
             data-gender="حريمي"
             data-category="ملابس"
+            data-product-id="womens-pants-wide-018"
           >
             <img
               src="https://images.unsplash.com/photo-1618244972963-dbee1a7edc95?w=500"
+              class="main-card-img"
               alt="بنطال"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>بنطال قماش واسع</h3>
             <p class="price">550 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -604,15 +745,20 @@
             data-price="800"
             data-gender="حريمي"
             data-category="ملابس"
+            data-product-id="womens-coat-winter-019"
           >
             <img
               src="https://images.unsplash.com/photo-1591369822096-ffd140ec948f?w=500"
+              class="main-card-img"
               alt="معطف"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>معطف شتوي طويل</h3>
             <p class="price">800 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -621,15 +767,20 @@
             data-price="280"
             data-gender="حريمي"
             data-category="ملابس"
+            data-product-id="womens-top-summer-020"
           >
             <img
               src="https://images.unsplash.com/photo-1475180098004-ca77a66827be?w=500"
+              class="main-card-img"
               alt="بلوزة"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>توب صيفي أزرق</h3>
             <p class="price">280 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -638,15 +789,20 @@
             data-price="420"
             data-gender="حريمي"
             data-category="ملابس"
+            data-product-id="womens-dress-midi-021"
           >
             <img
               src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=500"
+              class="main-card-img"
               alt="فستان"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>فستان ميدي أسود</h3>
             <p class="price">420 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -655,15 +811,20 @@
             data-price="370"
             data-gender="حريمي"
             data-category="ملابس"
+            data-product-id="womens-shirt-formal-022"
           >
             <img
-              src="https://images.unsplash.com/photo-1518622358173-5230983ad13f?w=500"
+              src="https://media.zid.store/60775460-e107-45c2-89a9-ffce4efe1292/279fb085-b8de-497c-ab11-ad6937f3cd72.jpg"
+              class="main-card-img"
               alt="قميص"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>قميص رسمي أبيض حريمي</h3>
             <p class="price">370 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -672,15 +833,20 @@
             data-price="500"
             data-gender="حريمي"
             data-category="ملابس"
+            data-product-id="womens-jeans-slim-023"
           >
             <img
-              src="https://images.unsplash.com/photo-1604176354204-926873ff34b1?w=500"
+              src="https://dfcdn.defacto.com.tr/7/E9132AX_26SP_NM34_01_01.jpg"
+              class="main-card-img"
               alt="جينز"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>جينز حريمي سليم</h3>
             <p class="price">500 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -689,15 +855,20 @@
             data-price="650"
             data-gender="حريمي"
             data-category="ملابس"
+            data-product-id="womens-cardigan-black-024"
           >
             <img
-              src="https://images.unsplash.com/photo-1544062650-cb959d3ba3af?w=500"
+              src="https://tse4.mm.bing.net/th/id/OIP.vlCdtvs6D-a6b1jak85R-gHaKA?rs=1&pid=ImgDetMain&o=7&rm=3"
+              class="main-card-img"
               alt="كارديجان"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>كارديجان صوف أسود</h3>
             <p class="price">650 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -706,15 +877,38 @@
             data-price="190"
             data-gender="حريمي"
             data-category="ملابس"
+            data-product-id="womens-tshirt-basic-025"
           >
-            <img
-              src="https://images.unsplash.com/photo-1502301103665-0b95cc738def?w=500"
-              alt="تيشيرت"
-              loading="lazy"
-            />
-            <h3>تيشيرت حريمي بسيط</h3>
-            <p class="price">190 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
+            <div class="product-image-gallery">
+              <img
+                src="https://images.unsplash.com/photo-1502301103665-0b95cc738def?w=500"
+                class="main-card-img"
+                alt="تيشيرت"
+                loading="lazy"
+              />
+              <div class="thumb-bar">
+                <img
+                  src="https://images.unsplash.com/photo-1502301103665-0b95cc738def?w=500"
+                  class="thumb-item active"
+                  loading="lazy"
+                />
+                <img
+                  src="https://khotwh.com/cdn/shop/files/wood-curved-long-sleeve-814715_600x@3x.progressive.jpg?v=1738841285"
+                  class="thumb-item"
+                  loading="lazy"
+                />
+              </div>
+              <div class="product-card-actions">
+                <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+                <a href="product-detail.html" class="btn-small"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+              </div>
+            </div>
+            <div class="product-card-body">
+              <p class="brand-name">MODA BASIC</p>
+              <h3>تيشيرت حريمي بسيط</h3>
+              <button class="wishlist-btn">❤</button>
+              <p class="price">190 جنيه</p>
+            </div>
           </div>
 
           <!-- أحذية رجالي (26-38) -->
@@ -723,15 +917,17 @@
             data-size="S,M"
             data-color="أبيض"
             data-price="890"
+            data-gender="رجالي"
+            data-category="أحذية"
+            data-product-id="mens-shoes-white-026"
           >
-            <img
-              src="https://images.unsplash.com/photo-1606107557195-cbce087d6705?w=500"
-              alt="حذاء رياضي رجالي أبيض"
-              loading="lazy"
-            />
+            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500" class="main-card-img" alt="حذاء رياضي رجالي أبيض" loading="lazy" />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء رياضي رجالي أبيض</h3>
             <p class="price">890 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -740,15 +936,20 @@
             data-price="750"
             data-gender="رجالي"
             data-category="أحذية"
+            data-product-id="mens-sneakers-white-027"
           >
             <img
               src="https://images.unsplash.com/photo-1552066343-5e685a234271?w=500"
+              class="main-card-img"
               alt="سنيكرز رجالي أبيض"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>سنيكرز رجالي أبيض</h3>
             <p class="price">750 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -757,15 +958,20 @@
             data-price="1100"
             data-gender="رجالي"
             data-category="أحذية"
+            data-product-id="mens-shoes-leather-028"
           >
             <img
               src="https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء جلد كلاسيك</h3>
             <p class="price">1100 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -774,15 +980,20 @@
             data-price="600"
             data-gender="رجالي"
             data-category="أحذية"
+            data-product-id="mens-shoes-sport-029"
           >
             <img
               src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=500"
+              class="main-card-img"
               alt="حذاء رياضي رجالي أبيض ملون جزئياً"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء رياضي رجالي أبيض</h3>
             <p class="price">600 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -791,15 +1002,20 @@
             data-price="950"
             data-gender="رجالي"
             data-category="أحذية"
+            data-product-id="mens-shoes-nike-030"
           >
             <img
               src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء نايكي أزرق</h3>
             <p class="price">950 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -808,15 +1024,20 @@
             data-price="1300"
             data-gender="رجالي"
             data-category="أحذية"
+            data-product-id="mens-boots-leather-031"
           >
             <img
-              src="https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=500"
+              src="https://tse4.mm.bing.net/th/id/OIP.jCrj7jW6H2hCmUMuBLS2gAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
+              class="main-card-img"
               alt="بوت"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>بوت جلدي أسود</h3>
             <p class="price">1300 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -825,15 +1046,20 @@
             data-price="450"
             data-gender="رجالي"
             data-category="أحذية"
+            data-product-id="mens-shoes-running-032"
           >
             <img
               src="https://images.unsplash.com/photo-1562183241-b937e95585b6?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء جري خفيف</h3>
             <p class="price">450 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -842,15 +1068,20 @@
             data-price="1150"
             data-gender="رجالي"
             data-category="أحذية"
+            data-product-id="mens-shoes-vans-033"
           >
             <img
               src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء فانس كلاسيك</h3>
             <p class="price">1150 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -859,15 +1090,20 @@
             data-price="1400"
             data-gender="رجالي"
             data-category="أحذية"
+            data-product-id="mens-shoes-italian-034"
           >
             <img
               src="https://images.unsplash.com/photo-1514989940723-e8e51635b782?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء جلد إيطالي</h3>
             <p class="price">1400 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -876,15 +1112,20 @@
             data-price="820"
             data-gender="رجالي"
             data-category="أحذية"
+            data-product-id="mens-shoes-sport-white-035"
           >
             <img
               src="https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء رياضي أبيض</h3>
             <p class="price">820 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -893,15 +1134,20 @@
             data-price="350"
             data-gender="رجالي"
             data-category="أحذية"
+            data-product-id="mens-shoes-canvas-036"
           >
             <img
               src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء قماش مريح</h3>
             <p class="price">350 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -910,15 +1156,20 @@
             data-price="900"
             data-gender="رجالي"
             data-category="أحذية"
+            data-product-id="mens-shoes-modern-037"
           >
             <img
               src="https://images.unsplash.com/photo-1512374382149-4332c6c02151?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء عصري أسود</h3>
             <p class="price">900 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -927,15 +1178,20 @@
             data-price="1250"
             data-gender="رجالي"
             data-category="أحذية"
+            data-product-id="mens-shoes-football-038"
           >
             <img
               src="https://images.unsplash.com/photo-1584735175315-9d5df23860e6?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء كرة قدم</h3>
             <p class="price">1250 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
 
           <!-- أحذية حرايمي (39-50) -->
@@ -944,15 +1200,17 @@
             data-size="S,M"
             data-color="أبيض"
             data-price="700"
+            data-gender="حريمي"
+            data-category="أحذية"
+            data-product-id="womens-heels-white-039"
           >
-            <img
-              src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"
-              alt="حذاء"
-              loading="lazy"
-            />
+            <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500" class="main-card-img" alt="حذاء" loading="lazy" />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء كعب عالٍ أبيض</h3>
             <p class="price">700 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -961,15 +1219,20 @@
             data-price="300"
             data-gender="حريمي"
             data-category="أحذية"
+            data-product-id="womens-sandals-summer-040"
           >
             <img
               src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=500"
+              class="main-card-img"
               alt="صندل"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>صندل صيفي مريح</h3>
             <p class="price">300 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -978,15 +1241,20 @@
             data-price="850"
             data-gender="حريمي"
             data-category="أحذية"
+            data-product-id="womens-heels-black-041"
           >
             <img
               src="https://images.unsplash.com/photo-1515347645631-de718509c65a?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء سهرة أسود</h3>
             <p class="price">850 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -995,15 +1263,20 @@
             data-price="400"
             data-gender="حريمي"
             data-category="أحذية"
+            data-product-id="womens-sneakers-white-042"
           >
             <img
-              src="https://images.unsplash.com/photo-1595341888016-a392ef81b7de?w=500"
+              src="https://images.unsplash.com/photo-1512374382149-4332c6c02151?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>سنيكرز حريمي ناعم</h3>
             <p class="price">400 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -1012,15 +1285,20 @@
             data-price="950"
             data-gender="حريمي"
             data-category="أحذية"
+            data-product-id="womens-boots-tall-043"
           >
             <img
               src="https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?w=500"
+              class="main-card-img"
               alt="بوت"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>بوت طويل حريمي</h3>
             <p class="price">950 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -1029,15 +1307,20 @@
             data-price="250"
             data-gender="حريمي"
             data-category="أحذية"
+            data-product-id="womens-slippers-comfy-044"
           >
             <img
               src="https://images.unsplash.com/photo-1520639889313-7272170b1ca0?w=500"
+              class="main-card-img"
               alt="سليبر"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>سليبر منزلي مريح</h3>
             <p class="price">250 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -1046,15 +1329,20 @@
             data-price="600"
             data-gender="حريمي"
             data-category="أحذية"
+            data-product-id="womens-shoes-casual-045"
           >
             <img
               src="https://images.unsplash.com/photo-1512374382149-4332c6c02151?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء رياضي كاجوال</h3>
             <p class="price">600 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -1063,15 +1351,20 @@
             data-price="780"
             data-gender="حريمي"
             data-category="أحذية"
+            data-product-id="womens-shoes-running-046"
           >
             <img
               src="https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء جري حريمي</h3>
             <p class="price">780 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -1080,15 +1373,20 @@
             data-price="550"
             data-gender="حريمي"
             data-category="أحذية"
+            data-product-id="womens-flats-black-047"
           >
             <img
               src="https://images.unsplash.com/photo-1518049362265-d5b2a6467637?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء باليرينا أسود</h3>
             <p class="price">550 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -1097,15 +1395,20 @@
             data-price="1200"
             data-gender="حريمي"
             data-category="أحذية"
+            data-product-id="womens-shoes-designer-048"
           >
             <img
-              src="https://images.unsplash.com/photo-1509462313885-fb27b42f8163?w=500"
+              src="https://tse4.mm.bing.net/th/id/OIP.8mquIW-bKUGCjjMUZUOYPgHaJ4?w=750&h=1000&rs=1&pid=ImgDetMain&o=7&rm=3"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء مصمم عالمي</h3>
             <p class="price">1200 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -1114,15 +1417,20 @@
             data-price="480"
             data-gender="حريمي"
             data-category="أحذية"
+            data-product-id="womens-shoes-canvas-049"
           >
             <img
               src="https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء قماش أزرق</h3>
             <p class="price">480 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
           <div
             class="product-card"
@@ -1131,15 +1439,20 @@
             data-price="620"
             data-gender="حريمي"
             data-category="أحذية"
+            data-product-id="womens-shoes-soft-leather-050"
           >
             <img
               src="https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=500"
+              class="main-card-img"
               alt="حذاء"
               loading="lazy"
             />
+            <div class="product-card-actions">
+              <button class="quick-add-btn"><i class="fas fa-shopping-cart"></i> إضافة سريعة</button>
+              <a href="product-detail.html" class="btn-small detail-btn-card"><i class="fas fa-eye"></i> عرض التفاصيل </a>
+            </div>
             <h3>حذاء جلدي ناعم</h3>
             <p class="price">620 جنيه</p>
-            <a href="product-detail.html" class="btn-small">عرض التفاصيل</a>
           </div>
         </div>
       </section>
@@ -1164,6 +1477,10 @@
         <p>جميع الحقوق محفوظة © 2026</p>
       </div>
     </footer>
-    <script src="main.js"></script>
+    <script src="main.js" defer></script>
+    <!-- زر العودة للأعلى -->
+    <button id="scroll-to-top-btn" class="scroll-to-top-btn">
+      <i class="fas fa-arrow-up"></i>
+    </button>
   </body>
 </html>

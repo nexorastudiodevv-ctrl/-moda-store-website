@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>تيشيرت قطني عصري - متجر مودة</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <meta
@@ -37,6 +38,10 @@
         }
       }
     </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://images.unsplash.com" />
+
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
@@ -45,38 +50,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      .product-detail-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 50px;
-        margin: 50px 0;
-      }
-      .product-info h1 {
-        font-size: 32px;
-        margin-bottom: 10px;
-      }
-      .options {
-        margin: 20px 0;
-      }
-      .size-chips {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-      }
-      .size-btn {
-        border: 1px solid #ddd;
-        padding: 5px 15px;
-        cursor: pointer;
-      }
-      .size-btn:hover {
-        border-color: #000;
-      }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet" />
   </head>
   <body>
     <header class="header">
@@ -86,8 +60,12 @@
         <nav class="nav">
           <a href="index.html">الرئيسية</a><a href="products.html">المنتجات</a>
         </nav>
+
         <div class="header-actions">
           <button class="icon-btn">❤ <span id="wishlist-count">0</span></button>
+          <a href="cart.html" class="icon-btn cart-icon-btn">
+            🛒 <span id="cart-count">0</span>
+          </a>
         </div>
       </div>
     </header>
@@ -102,6 +80,7 @@
       <a href="products.html#womens-section">👩 قسم النساء</a>
       <a href="products.html?filter=new">✨ وصل حديثاً</a>
       <a href="#">🔥 التخفيضات</a>
+      <a href="wishlist.html">❤ قائمة الأمنيات</a>
       <a href="#">📞 تواصل معنا</a>
     </div>
 
@@ -113,29 +92,25 @@
             src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80"
             style="width: 100%; border-radius: 4px"
           />
+          <!-- Thumbnails for product detail page -->
+          <div class="thumb-bar product-detail-thumb-bar">
+            <!-- Thumbnails will be dynamically loaded here by JavaScript -->
+          </div>
         </div>
-        <div class="product-info">
+        <div class="product-info"> 
           <h1 id="main-product-name">تيشيرت قطني عصري</h1>
-          <p
-            id="main-product-category"
-            style="color: #666; font-size: 14px; margin-bottom: 5px"
-          >
-            القسم: ملابس
-          </p>
-          <p id="main-product-price" class="price" style="font-size: 24px">
-            350 جنيه
-          </p>
-          <p id="main-product-desc" style="color: #666">
+          <p id="main-product-category">القسم: ملابس</p>
+          <p id="main-product-price" class="price">350 جنيه</p>
+          <p id="main-product-desc">
             خامة قطنية 100% مريحة جداً للاستخدام اليومي، متوفر بألوان متعددة.
           </p>
 
-          <div class="options">
+          <div class="options"> 
             <h4>المقاس:</h4>
             <div class="size-chips" id="product-sizes-container">
               <!-- المقاسات سيتم تحميلها ديناميكياً هنا -->
             </div>
           </div>
-
           <div class="options">
             <h4>اللون:</h4>
             <div class="size-chips" id="product-colors-container">
@@ -143,20 +118,9 @@
             </div>
           </div>
 
-          <div style="display: flex; gap: 10px">
-            <a href="cart.html" class="btn" style="flex: 1; text-align: center"
-              >إضافة إلى السلة</a
-            >
-            <button
-              id="detail-wishlist-btn"
-              class="btn"
-              style="
-                background: #fff;
-                color: var(--primary-color);
-                border: 1px solid var(--primary-color);
-                width: 60px;
-              "
-            >
+          <div class="product-detail-actions">
+            <button id="add-to-cart-btn" class="btn">إضافة إلى السلة</button>
+            <button id="detail-wishlist-btn" class="btn">
               ❤
             </button>
           </div>
@@ -191,6 +155,6 @@
         <p>جميع الحقوق محفوظة © 2026</p>
       </div>
     </footer>
-    <script src="main.js"></script>
+    <script src="main.js" defer></script>
   </body>
 </html>

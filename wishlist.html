@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>سلة المشتريات - Moda Store</title>
+    <title>قائمة الأمنيات - Moda Store</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link rel="stylesheet" href="style.css" />
     <link
@@ -21,6 +21,7 @@
         <button class="menu-toggle">☰</button>
         <div class="logo">MODA</div>
         <div class="header-actions">
+          <button id="dark-mode-toggle" class="icon-btn">🌙</button>
           <a href="wishlist.html" class="icon-btn">❤ <span id="wishlist-count">0</span></a>
           <a href="cart.html" class="icon-btn cart-icon-btn">
             🛒 <span id="cart-count">0</span>
@@ -44,29 +45,12 @@
     </div>
 
     <main class="container">
-      <h2 class="section-title">سلة المشتريات</h2>
-      <div style="overflow-x: auto; -webkit-overflow-scrolling: touch">
-        <table class="cart-table">
-          <thead>
-            <tr>
-              <th>المنتج</th>
-              <th>الكمية</th>
-              <th>السعر</th>
-              <th>حذف</th>
-            </tr>
-          </thead>
-          <tbody id="cart-items-body">
-            <!-- سيتم توليد المنتجات هنا بواسطة JavaScript -->
-          </tbody>
-        </table>
-      </div>
-      <div class="cart-summary">
-        <h3 id="cart-total-container">الإجمالي: <span id="cart-total-amount">0</span> جنيه</h3>
-        <a href="checkout.html" class="btn" style="margin-top: 10px"
-          >الانتقال للدفع</a
-        >
+      <h2 class="section-title">قائمة الأمنيات</h2>
+      <div id="wishlist-items-grid" class="product-grid">
+        <!-- سيتم توليد المنتجات هنا بواسطة JavaScript -->
       </div>
     </main>
+
     <footer class="footer">
       <div class="container">
         <div class="social-links">
