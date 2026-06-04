@@ -100,6 +100,9 @@
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
     />
     <link
       href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap"
@@ -127,12 +130,12 @@
       <button class="close-menu">✕</button>
       <a href="index.html">🏠 الرئيسية</a>
       <a href="products.html">👕 المنتجات</a>
-      <a href="#">✨ وصل حديثاً</a>
+      <a href="products.html?filter=new">✨ وصل حديثاً</a>
       <a href="#">🔥 التخفيضات</a>
       <a href="#">📞 تواصل معنا</a>
     </div>
 
-    <main class="container shop-container">
+    <main class="container shop-container" id="products-listing">
       <aside class="filters">
         <div class="filter-group">
           ت
@@ -181,6 +184,7 @@
 
       <section>
         <h2 class="section-title">جميع المنتجات</h2>
+        <div id="active-chips" class="active-filters"></div>
         <div class="product-grid">
           <!-- ملابس رجالي (1-12) -->
           <div
@@ -188,6 +192,7 @@
             data-size="S,M"
             data-color="أبيض"
             data-price="350"
+            data-new="true"
           >
             <div class="product-image-gallery">
               <img
@@ -496,6 +501,7 @@
             data-size="S,M"
             data-color="أبيض"
             data-price="600"
+            data-new="true"
           >
             <img
               src="https://images.unsplash.com/photo-1539008835757-c68c7d09b3e7?w=500"

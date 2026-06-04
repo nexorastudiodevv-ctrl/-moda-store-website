@@ -425,7 +425,8 @@ document.addEventListener('DOMContentLoaded', () => {
         category: [],
         color: [],
         size: [],
-        price: 2000
+        price: 2000,
+        newArrivals: false
     };
 
     const productCards = document.querySelectorAll('.product-card'); // All product cards
@@ -445,6 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const category = card.dataset.category;
             const color = card.dataset.color;
             const sizes = (card.dataset.size || '').split(',');
+            const isNew = card.dataset.new === 'true';
 
             const matchesSearch = name.includes(filters.search) || brand.includes(filters.search);
             const matchesPrice = price <= filters.price;
@@ -452,8 +454,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const matchesCategory = filters.category.length === 0 || filters.category.includes(category);
             const matchesColor = filters.color.length === 0 || filters.color.includes(color);
             const matchesSize = filters.size.length === 0 || filters.size.some(s => sizes.includes(s));
+            const matchesNew = !filters.newArrivals || isNew;
 
-            const isVisible = matchesSearch && matchesPrice && matchesGender && matchesCategory && matchesColor && matchesSize;
+            const isVisible = matchesSearch && matchesPrice && matchesGender && matchesCategory && matchesColor && matchesSize && matchesNew;
             card.style.display = isVisible ? 'block' : 'none';
 
             if (isVisible) {
@@ -497,6 +500,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('active-chips');
         if (!container) return;
         container.innerHTML = '';
+
+        if (filters.newArrivals) {
+            const chip = document.createElement('div');
+            chip.className = 'chip';
+            chip.innerHTML = `وصل حديثاً ✕`;
+            chip.onclick = () => {
+                filters.newArrivals = false;
+                updateMasterFilter();
+            };
+            container.appendChild(chip);
+        }
+
         ['gender', 'category', 'color', 'size'].forEach(type => {
             filters[type].forEach(val => {
                 const chip = document.createElement('div');
@@ -623,6 +638,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     if (params.has('category') && !filters.category.includes(params.get('category'))) filters.category.push(params.get('category'));
     if (params.has('gender') && !filters.gender.includes(params.get('gender'))) filters.gender.push(params.get('gender'));
+    if (params.has('filter') && params.get('filter') === 'new') filters.newArrivals = true;
 
     // Initial sync and filter application
     syncUIWithFilters();
