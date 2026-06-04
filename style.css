@@ -157,6 +157,25 @@ img:not([loading="lazy"]) {
     color: var(--accent-color);
 }
 
+/* تأثير اهتزاز السلة */
+@keyframes cartShake {
+    0% { transform: scale(1); }
+    20% { transform: scale(1.2) rotate(-10deg); }
+    40% { transform: scale(1.2) rotate(10deg); }
+    60% { transform: scale(1.2) rotate(-10deg); }
+    80% { transform: scale(1.2) rotate(10deg); }
+    100% { transform: scale(1); }
+}
+
+.cart-icon-btn {
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.cart-icon-btn.shake {
+    animation: cartShake 0.5s ease-in-out;
+}
+
 /* قسم الهيرو (Hero) */
 .hero {
     background: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80');
@@ -1172,7 +1191,17 @@ img:not([loading="lazy"]) {
     .category-grid,
     .product-grid {
         grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 10px;
+        column-gap: 10px;
+        row-gap: 15px;
+    }
+
+    /* تأثير الحركة عند التمرير للهاتف */
+    .product-card {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+        transition: opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1), 
+                    transform 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+        will-change: transform, opacity;
     }
 
     .product-card img,
@@ -1231,7 +1260,8 @@ img:not([loading="lazy"]) {
     .category-grid,
     .product-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
+        column-gap: 8px;
+        row-gap: 15px;
     }
 
     .product-card img,
@@ -1349,7 +1379,16 @@ img:not([loading="lazy"]) {
 }
 
 .product-card.in-view {
-    animation: pulse 0.8s ease-out 1; /* تشغيل الحركة مرة واحدة */
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    /* تشغيل حركة النبض الخفيفة بعد انتهاء الانزلاق */
+    animation: pulse 0.8s ease-out 1;
+}
+
+@media (max-width: 768px) {
+    .product-card.in-view {
+        animation: none; /* نكتفي بحركة الانزلاق (Slide Up) على الهاتف لتكون أنعم */
+    }
 }
 
 /* --- Admin Styles --- */

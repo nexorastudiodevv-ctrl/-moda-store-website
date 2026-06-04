@@ -14,6 +14,17 @@ function updateCartCountDisplay() {
     }
 }
 
+// دالة لتفعيل تأثير الاهتزاز لأيقونة السلة
+function triggerCartShake() {
+    const cartIcons = document.querySelectorAll('.cart-icon-btn');
+    cartIcons.forEach(icon => {
+        icon.classList.remove('shake');
+        void icon.offsetWidth; // Trigger reflow لإعادة تشغيل الحركة
+        icon.classList.add('shake');
+        setTimeout(() => icon.classList.remove('shake'), 500);
+    });
+}
+
 // New function for toast notifications
 function showToast(message, type = 'success') {
     const toast = document.getElementById('toast-notification');
@@ -241,6 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 localStorage.setItem('cart', JSON.stringify(cart));
                 updateCartCountDisplay(); // تحديث عداد السلة
+                triggerCartShake(); // تفعيل الاهتزاز
                 showToast('تمت إضافة المنتج للسلة بنجاح!');
             });
         });
@@ -394,6 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             localStorage.setItem('cart', JSON.stringify(cart));
             updateCartCountDisplay(); // تحديث عداد السلة
+            triggerCartShake(); // تفعيل الاهتزاز
             showToast('تم إضافة المنتج إلى السلة بنجاح!');
             window.location.href = 'cart.html';
         });
